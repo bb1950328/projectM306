@@ -1,11 +1,37 @@
 # coding=utf-8
 from time_entry.model import validate
+from time_entry.model.entity.entity import Entity
 
 
-class Project(object):
+class Project(Entity):
+
+    def get_insert_command(self):
+        return f"INSERT INTO {self.Table.name} (nr, name_, description_) VALUES " \
+               f"({self.nr}, '{self.name}', '{self.description}')"
+
+    def get_save_command(self):
+        return f"UPDATE {self.Table.name} SET name_='{self.name}', description_='{self.description}' " \
+               f"WHERE nr={self.nr}"
+
     _nr: int
     _name: str
     _description: str
+
+    class Table(object):
+        name = "project"
+        sql_script = """create table {name}
+                        (
+                            nr int not null,
+                            name_ VARCHAR(255) not null,
+                            description_ VARCHAR(1023) not null
+                        );
+                        create unique index {name}_name__uindex
+                            on {name} (name_);
+                        create unique index {name}_nr_uindex
+                            on {name} (nr);
+                        alter table {name}
+                            add constraint {name}_pk
+                                primary key (nr);"""
 
     @staticmethod
     def adapter(project) -> str:

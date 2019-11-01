@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 # coding=utf-8
-from time_entry.model.employee import Employee
+from time_entry.model.entity.employee import Employee
 
 
 class TestEmployee(TestCase):

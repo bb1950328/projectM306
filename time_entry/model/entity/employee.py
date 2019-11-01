@@ -1,11 +1,36 @@
 # coding=utf-8
 from time_entry.model import validate
+from time_entry.model.entity.entity import Entity
 
 
-class Employee(object):
+class Employee(Entity):
+    def get_insert_command(self):
+        return f"INSERT INTO {self.Table.name} (emplNr, firstName, lastName) VALUES " \
+               f"({self.emplNr}, '{self.firstName}', '{self.lastName}')"
+
+    def get_save_command(self):
+        return f"UPDATE {self.Table.name} SET firstName='{self.firstName}', lastName='{self.lastName}' " \
+               f"WHERE emplNr={self.emplNr}"
+
     _empl_nr: int
     _first_name: str
     _last_name: str
+
+    class Table(object):
+        name = "employee"
+        sql_script = f"""
+        create table {name}
+        (
+            emplNr int not null,
+            firstName VARCHAR(255) not null,
+            lastName VARCHAR(255) not null
+        );
+        create unique index {name}_emplNr_uindex
+            on {name} (emplNr);
+        alter table {name}
+            add constraint {name}_pk
+                primary key (emplNr);
+        """
 
     @staticmethod
     def adapter(employee) -> str:

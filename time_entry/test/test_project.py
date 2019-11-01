@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 # coding=utf-8
-from time_entry.model.project import Project
+from time_entry.model.entity.project import Project
 
 
 class TestProject(TestCase):
