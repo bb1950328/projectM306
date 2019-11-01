@@ -6,5 +6,54 @@
 </head>
 <body>
 <h1>Hallo {{ user.firstName }} {{ user.lastName }}</h1>
+<table>
+    <thead>
+    <tr>
+        <td>Projekt</td>
+        <td>Von</td>
+        <td>Bis</td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for day in days %}
+        <tr id="{{ day.id }}">
+            <td colspan="3">{{ day.displayName }}</td>
+        </tr>
+        {% for entry in day.entries %}
+            <tr>
+                <td><input type="text" value="{{ entry.project_nr }}"
+                           onchange="entry_changed('{{ entry.id }}')" class="project_input"></td>
+                <td><input type="text" value="{{ entry.project_nr }}"
+                           onchange="entry_changed('{{ entry.von }}')" class="von_input"></td>
+                <td><input type="text" value="{{ entry.project_nr }}"
+                           onchange="entry_changed('{{ entry.bis }}')" class="bis_input"></td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+<input type="button" value="Speichern" onclick="save_clicked()" id="save_button">
 </body>
+<script>
+    let unsaved_entries = [];
+
+    function entry_changed(entry_id) {
+        if (!unsaved_entries.includes(entry_id)) {
+            unsaved_entries.push(entry_id);
+            update_save_enabling();
+        }
+    }
+
+    function save_clicked() {
+        //TODO implement (send changes to server)
+        unsaved_entries = [];
+        update_save_enabling();
+    }
+
+    function update_save_enabling() {
+        document.getElementById("save_button").disabled = (unsaved_entries.length === 0);
+    }
+
+    update_save_enabling();
+</script>
 </html>
