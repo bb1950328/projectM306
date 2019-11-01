@@ -1,9 +1,27 @@
 # coding=utf-8
-from time_entry.model import validate
+from time_entry.model import validate, db
 from time_entry.model.entity.entity import Entity
 
 
 class Employee(Entity):
+
+    @staticmethod
+    def from_result(column_names, fetched):
+        def get(attr):
+            return fetched[column_names.index(attr)]
+
+        empl = Employee()
+        empl.emplNr = get("emplNr")
+        empl.firstName = get("firstName")
+        empl.lastName = get("lastName")
+        return empl
+
+    @staticmethod
+    def find(empl_nr):
+        cur = db.conn.cursor()
+        cur.execute(f"SELECT * FROM {Employee.Table.name} WHERE emplNr={empl_nr}")
+        return Employee.from_result(cur.column_names, cur.fetchone())
+
     def get_insert_command(self):
         return f"INSERT INTO {self.Table.name} (emplNr, firstName, lastName) VALUES " \
                f"({self.emplNr}, '{self.firstName}', '{self.lastName}')"
@@ -31,19 +49,6 @@ class Employee(Entity):
             add constraint {name}_pk
                 primary key (emplNr);
         """
-
-    @staticmethod
-    def adapter(employee) -> str:
-        return f"{employee.emplNr};{employee.firstName};{employee.lastName}"
-
-    @staticmethod
-    def converter(bytestring):
-        parts = bytestring.split(b";")
-        employee = Employee()
-        employee.emplNr = int(parts[0])
-        employee.firstName = parts[1].decode("UTF-8", "replace")
-        employee.lastName = parts[2].decode("UTF-8", "replace")
-        return employee
 
     def _get_empl_nr(self) -> int:
         return self._empl_nr

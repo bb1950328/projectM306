@@ -49,9 +49,6 @@ def setup_database(ignore_existing=False):
 
 
 def insert_test_data():
-    pass  # TODO basil implement
-
-
-def insert_entity(entity: Entity):
-    cur = conn.cursor()
-    cur.execute(entity.get_insert_command)
+    from time_entry.test import data
+    data.generate()
+    map(Entity.insert, data.employees + data.projects + data.entries)

@@ -1,9 +1,26 @@
 # coding=utf-8
-from time_entry.model import validate
+from time_entry.model import validate, db
 from time_entry.model.entity.entity import Entity
 
 
 class Project(Entity):
+
+    @staticmethod
+    def from_result(column_names, fetched):
+        def get(attr):
+            return fetched[column_names.index(attr)]
+
+        project = Project()
+        project.nr = get("nr")
+        project.name = get("name_")
+        project.description = get("description_")
+        return project
+
+    @staticmethod
+    def find(nr):
+        cur = db.conn.cursor()
+        cur.execute(f"SELECT * FROM {Project.Table.name} WHERE nr={nr}")
+        return Project.from_result(cur.column_names, cur.fetchone())
 
     def get_insert_command(self):
         return f"INSERT INTO {self.Table.name} (nr, name_, description_) VALUES " \
@@ -32,19 +49,6 @@ class Project(Entity):
                         alter table {name}
                             add constraint {name}_pk
                                 primary key (nr);"""
-
-    @staticmethod
-    def adapter(project) -> str:
-        return f"{project.nr};{project.name};{project.description}"
-
-    @staticmethod
-    def converter(bytestring):
-        parts = bytestring.split(b";")
-        project = Project()
-        project.nr = int(parts[0])
-        project.name = parts[1].decode("UTF-8", "replace")
-        project.description = parts[2].decode("UTF-8", "replace")
-        return project
 
     def _set_nr(self, nr: int) -> None:
         validate.greater_than_0(nr)

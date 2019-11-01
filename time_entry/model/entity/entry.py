@@ -2,13 +2,33 @@
 import datetime
 from typing import Optional
 
-from time_entry.model import validate, model, util
+from time_entry.model import validate, model, util, db
 from time_entry.model.entity.employee import Employee
 from time_entry.model.entity.entity import Entity
 from time_entry.model.entity.project import Project
 
 
 class Entry(Entity):
+
+    @staticmethod
+    def from_result(column_names, fetched):
+        def get(attr):
+            return fetched[column_names.index(attr)]
+
+        entry = Entry()
+        entry.id = get("id")
+        entry._emplNr = get("emplNr")
+        entry._project_nr = get("projectNr")
+        entry.start = get("start_")
+        entry.end = get("end_")
+        return entry
+
+    @staticmethod
+    def find(id):
+        cur = db.conn.cursor()
+        cur.execute(f"SELECT * FROM {Entry.Table.name} WHERE id={id}")
+        return Entry.from_result(cur.column_names, cur.fetchone())
+
     def get_insert_command(self):
         sql_start = util.datetime_to_sql(self.start)
         sql_end = util.datetime_to_sql(self.end)
