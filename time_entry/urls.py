@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.urls import path
 
-from time_entry.view import index
+from time_entry.view import index, login
 
 urlpatterns = [
     path("", index.index),
     path("index", index.index),
     path("index.html", index.index),
+    path("login", login.login),
+    path("login.html", login.login),
 ]

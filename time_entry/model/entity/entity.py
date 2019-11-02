@@ -5,7 +5,7 @@ from time_entry.model import db
 
 
 class Entity(metaclass=abc):
-    class Table(metaclass=abc):
+    class Table(object):
         name: str
         sql_script: str
 

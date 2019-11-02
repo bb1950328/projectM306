@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <label>
+        Mitarbeiternummer
+        <input type="number" id="input_employee_number" name="employee_number">
+    </label>
+    <br>
+    <label>
+        Passwort
+        <input type="password" id="input_password" name="password">
+    </label>
+    <br>
+    <input type="submit" value="Anmelden" id="login_button">
+</form>
+</body>
+</html>

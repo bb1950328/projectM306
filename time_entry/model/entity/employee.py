@@ -1,9 +1,13 @@
 # coding=utf-8
-from time_entry.model import validate, db
+from time_entry.model import validate, db, model
 from time_entry.model.entity.entity import Entity
 
 
 class Employee(Entity):
+
+    def insert(self):
+        super().insert()
+        model.add_user(str(self.emplNr), self.firstName)
 
     @staticmethod
     def from_result(column_names, fetched):

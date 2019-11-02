@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+{% extends 'base_page.html' %}
+{% comment %}<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>projectM306-Home</title>
 </head>
-<body>
-<h1>Hallo {{ user.firstName }} {{ user.lastName }}</h1>
+<body>{% endcomment %}
+{% block title %}Home{% endblock %}
+{% block content %}
 <table>
     <thead>
     <tr>
@@ -16,24 +18,23 @@
     </thead>
     <tbody>
     {% for day in days %}
-        <tr id="{{ day.id }}">
-            <td colspan="3">{{ day.displayName }}</td>
+        <tr id="{{ day.id }}" class="day_title">
+            <td colspan="100">{{ day.displayName }}</td>
         </tr>
         {% for entry in day.entries %}
             <tr>
                 <td><input type="text" value="{{ entry.project_nr }}"
                            onchange="entry_changed('{{ entry.id }}')" class="project_input"></td>
-                <td><input type="text" value="{{ entry.project_nr }}"
-                           onchange="entry_changed('{{ entry.von }}')" class="von_input"></td>
-                <td><input type="text" value="{{ entry.project_nr }}"
-                           onchange="entry_changed('{{ entry.bis }}')" class="bis_input"></td>
+                <td><input type="time" value="{{ entry.von }}"
+                           onchange="entry_changed('{{ entry.id }}')" class="von_input"></td>
+                <td><input type="time" value="{{ entry.bis }}"
+                           onchange="entry_changed('{{ entry.id }}')" class="bis_input"></td>
             </tr>
         {% endfor %}
     {% endfor %}
     </tbody>
 </table>
 <input type="button" value="Speichern" onclick="save_clicked()" id="save_button">
-</body>
 <script>
     let unsaved_entries = [];
 
@@ -56,4 +57,6 @@
 
     update_save_enabling();
 </script>
-</html>
+{% endblock %}
+{% comment %}
+</html>{% endcomment %}
