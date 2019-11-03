@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
+{% extends 'base_page.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
 <form method="post">
     {% csrf_token %}
     {% if message %}
@@ -22,5 +18,4 @@
     <br>
     <input type="submit" value="Anmelden" id="login_button">
 </form>
-</body>
-</html>
+{% endblock %}

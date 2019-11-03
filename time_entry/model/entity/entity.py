@@ -4,8 +4,8 @@ import abc
 from time_entry.model import db
 
 
-class Entity(metaclass=abc):
-    class Table(object):
+class Entity(abc.ABC):
+    class Table(abc.ABC):
         name: str
         sql_script: str
 

@@ -1,5 +1,5 @@
 # coding=utf-8
-from time_entry.model import validate, db, model
+import time_entry.model as model
 from time_entry.model.entity.entity import Entity
 
 
@@ -7,7 +7,7 @@ class Employee(Entity):
 
     def insert(self):
         super().insert()
-        model.add_user(str(self.emplNr), self.firstName)
+        model.model.add_user(str(self.emplNr), self.firstName)
 
     @staticmethod
     def from_result(column_names, fetched):
@@ -22,7 +22,7 @@ class Employee(Entity):
 
     @staticmethod
     def find(empl_nr):
-        cur = db.conn.cursor()
+        cur = model.db.conn.cursor()
         cur.execute(f"SELECT * FROM {Employee.Table.name} WHERE emplNr={empl_nr}")
         return Employee.from_result(cur.column_names, cur.fetchone())
 
@@ -64,15 +64,15 @@ class Employee(Entity):
         return self._last_name
 
     def _set_empl_nr(self, empl_nr) -> None:
-        validate.greater_than_0(empl_nr)
+        model.validate.greater_than_0(empl_nr)
         self._empl_nr = empl_nr
 
     def _set_first_name(self, first_name) -> None:
-        validate.name(first_name)
+        model.validate.name(first_name)
         self._first_name = first_name
 
     def _set_last_name(self, last_name) -> None:
-        validate.name(last_name)
+        model.validate.name(last_name)
         self._last_name = last_name
 
     emplNr = property(_get_empl_nr, _set_empl_nr)

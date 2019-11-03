@@ -1,12 +1,12 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 
-from time_entry.model.entity.employee import Employee
+import time_entry.model.entity.employee as employee
 from time_entry.model.entity.project import Project
 
 
 def new_employee(empl_nr, first_name, last_name):
-    em = Employee()
+    em = employee.Employee()
     em.emplNr = empl_nr
     em.firstName = first_name
     em.lastName = last_name
@@ -14,7 +14,7 @@ def new_employee(empl_nr, first_name, last_name):
 
 
 def edit_employee(empl_nr, new_first_name=None, new_last_name=None):
-    em = Employee.find(empl_nr)
+    em = employee.Employee.find(empl_nr)
     if new_first_name is not None:
         em.firstName = new_first_name
     if new_last_name is not None:

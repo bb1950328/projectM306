@@ -36,7 +36,7 @@ class Project(Entity):
 
     class Table(object):
         name = "project"
-        sql_script = """create table {name}
+        sql_script = f"""create table {name}
                         (
                             nr int not null,
                             name_ VARCHAR(255) not null,

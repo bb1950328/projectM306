@@ -2,8 +2,8 @@
 import datetime
 from typing import Optional
 
+import time_entry.model.entity.employee as employee
 from time_entry.model import validate, model, util, db
-from time_entry.model.entity.employee import Employee
 from time_entry.model.entity.entity import Entity
 from time_entry.model.entity.project import Project
 
@@ -45,7 +45,7 @@ class Entry(Entity):
 
     _id: int
     _empl_nr: int
-    _employee: Optional[Employee]
+    _employee: Optional[employee.Employee]
     _project_nr: int
     _project: Optional[Project]
     _start: datetime.datetime
@@ -61,7 +61,7 @@ class Entry(Entity):
                             start_ DATETIME not null,
                             end_ DATETIME not null,
                             constraint {name}_employee_emplNr_fk
-                                foreign key (emplNr) references {Employee.Table.name} (emplNr),
+                                foreign key (emplNr) references {employee.Employee.Table.name} (emplNr),
                             constraint {name}_project_nr_fk
                                 foreign key (projectNr) references {Project.Table.name} (nr)
                         );
@@ -72,7 +72,7 @@ class Entry(Entity):
                                 primary key (id);
                         """
 
-    def getEmployee(self) -> Employee:
+    def getEmployee(self) -> employee.Employee:
         if not self._employee:
             self._employee = model.get_employee(self._empl_nr)
         return self._employee

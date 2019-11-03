@@ -1,14 +1,13 @@
 # coding=utf-8
 from django.shortcuts import render
 
-
 # TODO https://docs.djangoproject.com/en/2.2/topics/auth/default/#authentication-in-web-requests
+from time_entry.view import base_view
 
 
 def index(request):
     context = {
-        "user": {"firstName": "Basil",
-                 "lastName": "Bader"},
+        **base_view.get_user_context(request),
         "days": [{"id": "day1",
                   "displayName": "Do, 31.10.2019",
                   "entries": [{"id": "entry1",

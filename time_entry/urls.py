@@ -23,4 +23,6 @@ urlpatterns = [
     path("index.html", index.index),
     path("login", login.login),
     path("login.html", login.login),
+    path("logout", login.logout),
+    path("logout.html", login.logout),
 ]

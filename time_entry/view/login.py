@@ -3,6 +3,8 @@ from django.contrib import auth
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 
+import time_entry.model.entity.employee as employee
+
 
 def login(request: WSGIRequest):
     context = {"message": ""}
@@ -17,10 +19,9 @@ def login(request: WSGIRequest):
 
 
 def logout(request: WSGIRequest):
-    from time_entry.model.entity.employee import Employee
     context = {}
     if request.user.is_authenticated:
-        empl = Employee.find(int(request.user.get_username()))
+        empl = employee.Employee.find(int(request.user.get_username()))
         context["message"] = f"{empl.firstName} {empl.lastName}, Sie wurden ausgeloggt."
     else:
         context["message"] = "Niemand war eingeloggt."
