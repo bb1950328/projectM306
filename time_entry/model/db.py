@@ -1,10 +1,4 @@
 # coding=utf-8
-import logging
-import re
-
-logging.getLogger().setLevel(logging.DEBUG)
-
-
 def name_is_main():
     return __name__ == "__main__"
 
@@ -14,16 +8,19 @@ if name_is_main():
 
     django.setup()
 
+import logging
+import re
 import sys
 
+from django.contrib.auth.models import User
 from mysql import connector
 from mysql.connector import DatabaseError
 
 import time_entry.model.entity.employee as employee
-import time_entry.model.entity.entity as entity
 import time_entry.model.entity.entry as entry
 import time_entry.model.entity.project as project
 
+logging.getLogger().setLevel(logging.DEBUG)
 conn = None
 
 
@@ -53,6 +50,13 @@ def connect_to_database():
         conn = None
 
 
+def drop_database(cursor=None):
+    if cursor is None:
+        cursor = conn.cursor()
+    cursor.execute(f"DROP DATABASE {Const.database_name}")
+    User.objects.all().delete()
+
+
 def setup_database(ignore_existing=True):
     local_conn = connector.connect(**Const.connect_params)
     cur = local_conn.cursor()
@@ -65,7 +69,7 @@ def setup_database(ignore_existing=True):
     if already_exists:
         if ignore_existing:
             logging.getLogger().warning("Because ignore_existing is true, the existing database is dropped")
-            cur.execute(f"DROP DATABASE {db_name}")
+            drop_database(cur)
         else:
             raise ValueError(f"Database {db_name} already exists!!")
 
@@ -91,7 +95,8 @@ def setup_database(ignore_existing=True):
 def insert_test_data():
     from time_entry.test import data
     data.generate()
-    map(entity.Entity.insert, data.employees + data.projects + data.entries)
+    for ent in data.employees + data.projects + data.entries:
+        ent.insert(conn)
 
 
 if name_is_main():
@@ -100,3 +105,5 @@ if name_is_main():
     """
     for command in sys.argv[1:]:
         globals()[command]()
+else:
+    connect_to_database()

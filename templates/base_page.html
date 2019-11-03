@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static "css/style.css" %}">
 </head>
 <body>
-{% if user %}
+{% if user_authenticated %}
     Angemeldet als {{ user.firstName }} {{ user.lastName }} <a href="logout.html">Abmelden</a>
 {% else %}
     Nicht angemeldet <a href="login.html">Anmelden</a>

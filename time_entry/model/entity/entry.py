@@ -33,7 +33,7 @@ class Entry(Entity):
         sql_start = util.datetime_to_sql(self.start)
         sql_end = util.datetime_to_sql(self.end)
         return f"INSERT INTO {self.Table.name} (id, emplNr, projectNr, start_, end_) " \
-               f"VALUES ((SELECT MAX(id) FROM {self.Table.name}), {self._empl_nr}, {self._project_nr}, " \
+               f"VALUES (IFNULL((SELECT MAX(id) FROM entry as tmpTable), 0) + 1, {self._empl_nr}, {self._project_nr}, " \
                f"{sql_start}, {sql_end})"
 
     def get_save_command(self):

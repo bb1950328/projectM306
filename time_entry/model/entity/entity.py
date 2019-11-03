@@ -30,7 +30,15 @@ class Entity(abc.ABC):
     def save(self):
         cur = db.conn.cursor()
         cur.execute(self.get_save_command())
+        db.conn.commit()
+        cur.close()
 
-    def insert(self):
-        cur = db.conn.cursor()
-        cur.execute(self.get_insert_command())
+    def insert(self, connection=None):
+        if connection is None:
+            connection = db.conn
+        cur = connection.cursor()
+        command = self.get_insert_command()
+        print(command)
+        cur.execute(command)
+        connection.commit()
+        cur.close()

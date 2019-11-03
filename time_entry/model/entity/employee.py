@@ -5,8 +5,8 @@ from time_entry.model.entity.entity import Entity
 
 class Employee(Entity):
 
-    def insert(self):
-        super().insert()
+    def insert(self, connection=None):
+        super().insert(connection)
         model.model.add_user(str(self.emplNr), self.firstName)
 
     @staticmethod
