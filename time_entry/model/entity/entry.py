@@ -3,12 +3,16 @@ import datetime
 from typing import Optional
 
 import time_entry.model.entity.employee as employee
-from time_entry.model import validate, model, util, db
+from time_entry.model import validate, util, db
 from time_entry.model.entity.entity import Entity
 from time_entry.model.entity.project import Project
 
 
 class Entry(Entity):
+
+    def __init__(self):
+        self._employee = None
+        self._project = None
 
     @staticmethod
     def from_result(column_names, fetched):
@@ -74,12 +78,12 @@ class Entry(Entity):
 
     def getEmployee(self) -> employee.Employee:
         if not self._employee:
-            self._employee = model.get_employee(self._empl_nr)
+            self._employee = employee.Employee.find(self._empl_nr)
         return self._employee
 
     def getProject(self) -> Project:
         if not self._project:
-            self._project = model.get_project(self._project_nr)
+            self._project = Project.find(self._project_nr)
         return self._project
 
     def _set_id(self, id: int) -> None:

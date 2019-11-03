@@ -1,37 +1,69 @@
 # coding=utf-8
-from django.shortcuts import render
+import datetime
+
+from django.core.handlers.wsgi import WSGIRequest
+from django.shortcuts import render, redirect
 
 # TODO https://docs.djangoproject.com/en/2.2/topics/auth/default/#authentication-in-web-requests
-from time_entry.view import base_view
+from time_entry.model import model
+from time_entry.view import base_view, login
 
 
-def index(request):
+def index(request: WSGIRequest):
+    if not request.user.is_authenticated:
+        return redirect(login.login)
     context = {
         **base_view.get_user_context(request),
-        "days": [{"id": "day1",
-                  "displayName": "Do, 31.10.2019",
-                  "entries": [{"id": "entry1",
-                               "project_nr": 1,
-                               "von": "07:23",
-                               "bis": "11:54"},
-                              {"id": "entry2",
-                               "project_nr": 3,
-                               "von": "12:27",
-                               "bis": "16:25"},
-                              ]
-                  },
-                 {"id": "day2",
-                  "displayName": "Fr, 1.11.2019",
-                  "entries": [{"id": "entry3",
-                               "project_nr": 1,
-                               "von": "07:26",
-                               "bis": "11:51"},
-                              {"id": "entry4",
-                               "project_nr": 5,
-                               "von": "12:20",
-                               "bis": "15:55"},
-                              ]
-                  }
-                 ]
+        **generate_entries_context(request.user.get_username(), request.GET),
     }
     return render(request, "index.html", context)
+
+
+def generate_entries_context(empl_nr: int, GET) -> dict:
+    mode = GET.get("mode")
+    if mode is None:
+        now = datetime.datetime.now()
+        year = now.year
+        month = now.month
+        mode = "m"
+    else:
+        year = int(GET.get("year"))
+        if mode.startswith("m"):
+            mode = "m"
+            month = int(GET.get("month"))
+        elif mode.startswith("w"):
+            mode = "w"
+            week = int(GET.get("week"))
+    if mode == "m":
+        start = datetime.datetime(year, month, 1)
+        mp1 = month + 1
+        yp1 = year
+        if mp1 == 13:
+            mp1 = 1
+            yp1 += 1
+        end = start.replace(month=mp1, year=yp1)
+    else:
+        start = datetime.datetime.strptime(f"{year}_{week - 1}_1", "%Y_%W_%w")  # python week numbers start from 0
+        end = start + datetime.timedelta(days=7)
+
+    entries = model.collect_entries(empl_nr, start, end)
+    days = {}
+    for entry in entries:
+        day = entry.start.date()
+
+        con = {"project_nr": entry.getProject().nr,
+               "project_name": entry.getProject().name,
+               "von": entry.start.strftime("%H:%M"),
+               "bis": entry.end.strftime("%H:%M"),
+               }
+        try:
+            days[day].append(con)
+        except KeyError:
+            days[day] = [con]
+    context = {"days": []}
+    for day, entries in days.items():
+        context["days"].append(
+            {"id": day.isoformat(),
+             "displayName": day.strftime("%a, %d.%m.%Y"),
+             "entries": entries})
+    return context

@@ -1,7 +1,11 @@
 # coding=utf-8
+import datetime
+
 from django.contrib.auth.models import User
 
 import time_entry.model.entity.employee as employee
+import time_entry.model.entity.entry as entry
+from time_entry.model import db, util
 from time_entry.model.entity.project import Project
 
 
@@ -44,3 +48,14 @@ def add_user(username, password):
 def reset_password(username, new_password):
     user = User.objects.get(username)
     user.set_password(new_password)
+
+
+def collect_entries(empl_nr: int, start: datetime.datetime, end: datetime.datetime):
+    cur = db.conn.cursor()
+    sql_start = util.datetime_to_sql(start)
+    sql_end = util.datetime_to_sql(end)
+    command = f"SELECT * FROM {entry.Entry.Table.name} " \
+              f"WHERE emplNr={empl_nr} AND start_ > {sql_start} AND end_ < {sql_end}"
+    print(command)
+    cur.execute(command)
+    return [entry.Entry.from_result(cur.column_names, res) for res in cur.fetchall()]

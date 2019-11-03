@@ -34,7 +34,9 @@ def generate():
     entries_data = [[1, 1, datetime.datetime(2019, 10, 25, 7, 25, 0), datetime.datetime(2019, 10, 25, 11, 55, 30)],
                     [1, 2, datetime.datetime(2019, 10, 25, 13, 0, 0), datetime.datetime(2019, 10, 25, 16, 12, 59)],
                     [2, 3, datetime.datetime(2019, 10, 25, 13, 15, 0), datetime.datetime(2019, 10, 25, 17, 59, 59)],
-                    [3, 3, datetime.datetime(2019, 10, 26, 8, 15, 0), datetime.datetime(2019, 10, 25, 12, 16, 17)],
+                    [3, 3, datetime.datetime(2019, 10, 26, 8, 15, 0), datetime.datetime(2019, 10, 26, 12, 16, 17)],
+                    [1, 1, datetime.datetime(2019, 10, 26, 3, 15, 0), datetime.datetime(2019, 10, 26, 12, 1, 17)],
+                    [1, 1, datetime.datetime(2019, 10, 28, 14, 35, 0), datetime.datetime(2019, 10, 28, 18, 19, 17)],
                     ]
 
     for empl_nr, first_name, last_name in employees_data:

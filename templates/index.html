@@ -17,11 +17,15 @@
         {% for entry in day.entries %}
             <tr>
                 <td><input type="text" value="{{ entry.project_nr }}"
-                           onchange="entry_changed('{{ entry.id }}')" class="project_input"></td>
+                           onchange="entry_changed('{{ entry.id }}')" class="project_input">
+                    {{ entry.project_name }}
+                </td>
                 <td><input type="time" value="{{ entry.von }}"
-                           onchange="entry_changed('{{ entry.id }}')" class="von_input"></td>
+                           onchange="entry_changed('{{ entry.id }}')" class="von_input">
+                </td>
                 <td><input type="time" value="{{ entry.bis }}"
-                           onchange="entry_changed('{{ entry.id }}')" class="bis_input"></td>
+                           onchange="entry_changed('{{ entry.id }}')" class="bis_input">
+                </td>
             </tr>
         {% endfor %}
     {% endfor %}

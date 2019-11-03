@@ -1,4 +1,7 @@
 # coding=utf-8
+from typing import Optional
+
+
 def name_is_main():
     return __name__ == "__main__"
 
@@ -14,14 +17,14 @@ import sys
 
 from django.contrib.auth.models import User
 from mysql import connector
-from mysql.connector import DatabaseError
+from mysql.connector import DatabaseError, MySQLConnection
 
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
 import time_entry.model.entity.project as project
 
 logging.getLogger().setLevel(logging.DEBUG)
-conn = None
+conn: Optional[MySQLConnection] = None
 
 
 class Const(object):
