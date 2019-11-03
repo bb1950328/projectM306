@@ -1,5 +1,6 @@
 # coding=utf-8
 import logging
+import re
 
 logging.getLogger().setLevel(logging.DEBUG)
 
@@ -52,7 +53,7 @@ def connect_to_database():
         conn = None
 
 
-def setup_database(ignore_existing=False):
+def setup_database(ignore_existing=True):
     local_conn = connector.connect(**Const.connect_params)
     cur = local_conn.cursor()
     already_exists = True
@@ -74,10 +75,12 @@ def setup_database(ignore_existing=False):
     commands = "\n".join(ent.Table.sql_script for ent in Const.all_entities)
     logging.getLogger().info("Executing the following sql script to create all the tables: " + commands)
     from mysql.connector.cursor import RE_SQL_SPLIT_STMTS
+    nl_and_indent = re.compile(b"\\n\\s*")
     encoded = commands.encode(local_conn.python_charset)
     for statement in RE_SQL_SPLIT_STMTS.split(encoded):
-        if statement.strip():
-            print(statement.strip())
+        formatted = b"".join(nl_and_indent.split(statement))
+        if formatted:
+            print(formatted)
             cur.execute(statement)
 
     local_conn.commit()
