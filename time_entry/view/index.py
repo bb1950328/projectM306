@@ -55,6 +55,7 @@ def generate_entries_context(empl_nr: int, GET) -> dict:
                "project_name": entry.getProject().name,
                "von": entry.start.strftime("%H:%M"),
                "bis": entry.end.strftime("%H:%M"),
+               "id": entry.id,
                }
         try:
             days[day].append(con)

@@ -1,57 +1,113 @@
 {% extends 'base_page.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<table>
-    <thead>
-    <tr>
-        <td>Projekt</td>
-        <td>Von</td>
-        <td>Bis</td>
-    </tr>
-    </thead>
-    <tbody>
-    {% for day in days %}
-        <tr id="{{ day.id }}" class="day_title">
-            <td colspan="100">{{ day.displayName }}</td>
+    <table>
+        <thead>
+        <tr>
+            <td>Projekt</td>
+            <td>Von</td>
+            <td>Bis</td>
         </tr>
-        {% for entry in day.entries %}
-            <tr>
-                <td><input type="text" value="{{ entry.project_nr }}"
-                           onchange="entry_changed('{{ entry.id }}')" class="project_input">
-                    {{ entry.project_name }}
-                </td>
-                <td><input type="time" value="{{ entry.von }}"
-                           onchange="entry_changed('{{ entry.id }}')" class="von_input">
-                </td>
-                <td><input type="time" value="{{ entry.bis }}"
-                           onchange="entry_changed('{{ entry.id }}')" class="bis_input">
+        </thead>
+        <tbody>
+        {% for day in days %}
+            <tr id="{{ day.id }}" class="day_title">
+                <td colspan="2">{{ day.displayName }}</td>
+                <td>
+                    <button onclick="add_entry('{{ day.id }}')">+</button>
                 </td>
             </tr>
+            {% for entry in day.entries %}
+                <tr>
+                    <td><input type="number" value="{{ entry.project_nr }}" id="project_input_{{ entry.id }}"
+                               onchange="entry_changed('{{ entry.id }}')" class="project_input">
+                        <span id="project_name_{{ entry.id }}">{{ entry.project_name }}</span>
+                    </td>
+                    <td><input type="time" value="{{ entry.von }}" id="von_input_{{ entry.id }}"
+                               onchange="entry_changed('{{ entry.id }}')" class="von_input">
+                    </td>
+                    <td><input type="time" value="{{ entry.bis }}" id="bis_input_{{ entry.id }}"
+                               onchange="entry_changed('{{ entry.id }}')" class="bis_input">
+                    </td>
+                </tr>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
-    </tbody>
-</table>
-<input type="button" value="Speichern" onclick="save_clicked()" id="save_button">
-<script>
-    let unsaved_entries = [];
+        </tbody>
+    </table>
+    <input type="button" value="Speichern" onclick="save_clicked()" id="save_button">
+
+    <script>
+        function add_entry(day_id) {
+            let dayrow = document.getElementById(day_id);
+            let entry_id = "new" + Date.now().toString(10);
+            let tr = document.createElement("tr");
+            let td_project = document.createElement("td");
+            let td_von = document.createElement("td");
+            let td_bis = document.createElement("td");
+            let input_project = document.createElement("input");
+            let input_von = document.createElement("input");
+            let input_bis = document.createElement("input");
+            let span_project = document.createElement("span");
+
+            let event_func = function event_handler() {
+                entry_changed(entry_id);
+            }; // TODO basil function should be called
+
+            tr.appendChild(td_project);
+            tr.appendChild(td_von);
+            tr.appendChild(td_bis);
+            td_project.appendChild(input_project);
+            td_project.appendChild(span_project);
+            td_von.appendChild(input_von);
+
+            td_bis.appendChild(input_bis);
+            input_project.type = "number";
+            input_project.value = "0";
+            input_project.id = "project_input_" + entry_id;
+            input_project.setAttribute("onchange", event_func);
+            input_project.classList.add("project_input");
+
+            span_project.id = "project_name_" + entry_id;
+
+            input_von.type = "time";
+            input_von.value = "00:00";
+            input_von.id = "von_input_" + entry_id;
+            input_von.setAttribute("onchange", event_func);
+            input_von.classList.add("von_input");
+
+            input_bis.type = "time";
+            input_bis.value = "00:00";
+            input_bis.id = "bis_input_" + entry_id;
+            input_bis.setAttribute("onchange", event_func);
+            input_bis.classList.add("bis_input");
+
+            dayrow.after(tr);
+            new_entries.push(entry_id);
+            update_save_enabling();
+        }
+
+        let changed_entries = [];
+        let new_entries = [];
 
     function entry_changed(entry_id) {
-        if (!unsaved_entries.includes(entry_id)) {
-            unsaved_entries.push(entry_id);
+        console.log("Entry with id " + entry_id + " changed.");
+        if (!changed_entries.includes(entry_id)) {
+            changed_entries.push(entry_id);
             update_save_enabling();
         }
     }
 
     function save_clicked() {
         //TODO implement (send changes to server)
-        unsaved_entries = [];
+        changed_entries = [];
+        new_entries = [];
         update_save_enabling();
     }
 
     function update_save_enabling() {
-        document.getElementById("save_button").disabled = (unsaved_entries.length === 0);
+        document.getElementById("save_button").disabled = (changed_entries.length === 0 && new_entries.length === 0);
     }
 
     update_save_enabling();
-</script>
+    </script>
 {% endblock %}
