@@ -40,15 +40,15 @@ class Entry(Entity):
         sql_start = util.datetime_to_sql(self.start)
         sql_end = util.datetime_to_sql(self.end)
         return f"INSERT INTO {self.Table.name} (id, emplNr, projectNr, start_, end_) " \
-               f"VALUES (IFNULL((SELECT MAX(id) FROM entry as tmpTable), 0) + 1, {self._empl_nr}, {self._project_nr}, " \
-               f"{sql_start}, {sql_end})"
+               f"VALUES (IFNULL((SELECT MAX(id) FROM {self.Table.name} as tmpTable), 0) + 1, " \
+               f"{self._empl_nr}, {self._project_nr}, {sql_start}, {sql_end})"
 
     def get_save_command(self):
         sql_start = util.datetime_to_sql(self.start)
         sql_end = util.datetime_to_sql(self.end)
         return f"UPDATE {self.Table.name} SET " \
-               f"emplNr='{self._empl_nr}', projectNr='{self._project_nr}', start_={sql_start}, end_={sql_end}" \
-               f"WHERE id={self.id}"
+               f"emplNr={self._empl_nr}, projectNr={self._project_nr}, start_={sql_start}, end_={sql_end}" \
+               f" WHERE id={self.id}"
 
     def collides_with(self, other, fromself=False):
         start_inside = self.start < other.start < self.end

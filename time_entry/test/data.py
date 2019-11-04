@@ -2,7 +2,7 @@
 import datetime
 
 from time_entry.model import settings
-from time_entry.model.entity import setting
+from time_entry.model.entity import setting, absence
 from time_entry.model.entity.employee import Employee
 from time_entry.model.entity.entry import Entry
 from time_entry.model.entity.project import Project
@@ -45,6 +45,12 @@ def generate():
     settings_data = {settings.Names.MAX_WORK_PER_DAY: "12",
                      settings.Names.SOLL_WORK_PER_DAY: "8.4"}
 
+    absences_data = [
+        [2, datetime.date(2019, 11, 4), datetime.date(2019, 11, 4), "Krankheit 1d"],
+        [2, datetime.date(2019, 11, 7), datetime.date(2019, 11, 8), "Krankheit 2d"],
+        [4, datetime.date(2019, 11, 4), datetime.date(2019, 11, 8), "Sonstiges 5d"],
+    ]
+
     for key, value in settings_data.items():
         se = setting.Setting()
         se.key = key
@@ -74,5 +80,11 @@ def generate():
         en.start = start
         en.end = end
         entries.append(en)
+
+    for empl_nr, start, end, reason in absences_data:
+        ab = absence.Absence(empl_nr, reason)
+        ab.start = start
+        ab.end = end
+        entries.append(ab)
 
     _generated = True

@@ -22,7 +22,7 @@ from mysql.connector import DatabaseError, MySQLConnection
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
 import time_entry.model.entity.project as project
-from time_entry.model.entity import setting
+from time_entry.model.entity import setting, absence
 
 logging.getLogger().setLevel(logging.DEBUG)
 conn: Optional[MySQLConnection] = None
@@ -42,6 +42,7 @@ class Const(object):
                     employee.Employee,
                     project.Project,
                     entry.Entry,
+                    absence.Absence,
                     ]
 
 

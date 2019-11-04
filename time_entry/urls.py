@@ -21,8 +21,7 @@ from time_entry.view import index, login, employee_view
 def gen(url, func):
     return [path(url, func),
             path(url + "/", func),
-            path(url + ".html", func),
-            path(url + ".html/", func)]
+            path(url + ".html", func)]
 
 
 urlpatterns = [
