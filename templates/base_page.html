@@ -14,8 +14,30 @@
     Nicht angemeldet <a href="login.html">Anmelden</a>
 {% endif %}
 <hr>
+{% if messages %}
+    <div id="message_box_background">
+    </div>
+    <div id="message_box">
+        <h3>Achtung!</h3>
+        <ul>
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+        <button onclick="hide_message_box()">OK</button>
+    </div>
+{% endif %}
 {% block content %}
     ProjectM306
 {% endblock %}
+<script>
+    function hide_message_box() {
+        let message_box = document.getElementById("message_box");
+        let message_box_backgrond = document.getElementById("message_box_background");
+        message_box.outerHTML = "";
+        message_box_backgrond.outerHTML = "";
+    }
+</script>
 </body>
 </html>

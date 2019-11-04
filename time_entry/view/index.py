@@ -3,7 +3,6 @@ import datetime
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
-# TODO https://docs.djangoproject.com/en/2.2/topics/auth/default/#authentication-in-web-requests
 from django.utils.safestring import mark_safe
 
 from time_entry.model import model
@@ -13,8 +12,11 @@ from time_entry.view import base_view, login
 def index(request: WSGIRequest):
     if not request.user.is_authenticated:
         return redirect(login.login)
+    empl_nr = int(request.user.get_username())
+    messages = model.save_changes(empl_nr, request.GET)
     context = {
         **base_view.get_user_context(request),
+        **base_view.get_message_context(messages),
         **generate_entries_context(request.user.get_username(), request.GET),
         "project_names": mark_safe(model.get_all_projects_as_json()),
     }

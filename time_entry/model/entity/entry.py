@@ -3,26 +3,29 @@ import datetime
 from typing import Optional
 
 import time_entry.model.entity.employee as employee
-from time_entry.model import validate, util, db
+from time_entry.model import validate, util, db, model
 from time_entry.model.entity.entity import Entity
 from time_entry.model.entity.project import Project
 
 
 class Entry(Entity):
 
-    def __init__(self):
+    def __init__(self, project_nr=None, empl_nr=None):
+        self._project_nr = project_nr
+        self._empl_nr = empl_nr
         self._employee = None
         self._project = None
+        self._id = None
+        self._start = None
+        self._end = None
 
     @staticmethod
     def from_result(column_names, fetched):
         def get(attr):
             return fetched[column_names.index(attr)]
 
-        entry = Entry()
+        entry = Entry(get("projectNr"), get("emplNr"))
         entry.id = get("id")
-        entry._emplNr = get("emplNr")
-        entry._project_nr = get("projectNr")
         entry.start = get("start_")
         entry.end = get("end_")
         return entry
@@ -47,13 +50,41 @@ class Entry(Entity):
                f"emplNr='{self._empl_nr}', projectNr='{self._project_nr}', start_={sql_start}, end_={sql_end}" \
                f"WHERE id={self.id}"
 
-    _id: int
-    _empl_nr: int
+    def collides_with(self, other, fromself=False):
+        start_inside = self.start < other.start < self.end
+        end_inside = self.start < other.end < self.end
+        from_other = other.collides_with(self, fromself=True) if not fromself else False
+        return start_inside or end_inside or from_other
+
+    def validate(self):
+        if self.start.date() != self.end.date():
+            raise ValueError("[Von] und [Bis] müssen am gleichen Tag sein!")
+        if self.start > self.end:
+            raise ValueError("[Von] muss vor [Bis] sein!")
+        for_today = model.collect_entries(self._empl_nr,
+                                          self.start.replace(hour=0, minute=0, second=0),
+                                          self.end.replace(hour=23, minute=59, second=59))
+        if self.id:
+            for_today = list(filter(lambda e: e.id != self.id, for_today))
+        sum_work = self.end - self.start
+        for en in for_today:
+            sum_work += (en.end - en.start)
+            if self.collides_with(en):
+                raise ValueError(f"{self} kollidiert mit {en}")
+        sum_work_hours = sum_work.total_seconds() / 3600
+        if sum_work_hours > self.MAX_WORK_PER_DAY:
+            raise ValueError(f"Sie dürfen am {self.start.strftime('%d.%m.%Y')} "
+                             f"höchstens {self.MAX_WORK_PER_DAY}h arbeiten!")
+
+    _id: Optional[int]
+    _empl_nr: Optional[int]
     _employee: Optional[employee.Employee]
-    _project_nr: int
+    _project_nr: Optional[int]
     _project: Optional[Project]
-    _start: datetime.datetime
-    _end: datetime.datetime
+    _start: Optional[datetime.datetime]
+    _end: Optional[datetime.datetime]
+
+    MAX_WORK_PER_DAY = 12  # hours
 
     class Table(object):
         name = "entry"
@@ -104,6 +135,10 @@ class Entry(Entity):
 
     def _get_end(self) -> datetime.datetime:
         return self._end
+
+    def __str__(self):
+        return f"[Erfassung von {self.start.isoformat(sep=' ')} bis {self.end.isoformat(sep=' ')} " \
+               f"auf Projekt Nr. {self._project_nr} von Mitarbeiter Nr. {self._empl_nr}]"
 
     id = property(_get_id, _set_id)
     start = property(_get_start, _set_start)

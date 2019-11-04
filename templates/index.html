@@ -29,7 +29,7 @@
                 <tr>
                     <td><input type="number" value="{{ entry.project_nr }}" id="project_input_{{ entry.id }}"
                                onchange="entry_changed('{{ entry.id }}')" class="project_input">
-                        <span id="project_name_{{ entry.id }}">{{ entry.project_name }}</span>
+                        <span id="project_name_{{ entry.id }}" class="{{ day.id }}">{{ entry.project_name }}</span>
                     </td>
                     <td><input type="time" value="{{ entry.von }}" id="von_input_{{ entry.id }}"
                                onchange="entry_changed('{{ entry.id }}')" class="von_input">
@@ -57,6 +57,7 @@
         }
 
         function change_selection(value) {
+            console.log(value);
             let week_or_month = document.getElementById("input_week_or_month");
             let year = document.getElementById("input_year");
             let max_value = {{ selection.max_value }};
@@ -131,6 +132,7 @@
             input_project.classList.add("project_input");
 
             span_project.id = "project_name_" + entry_id;
+            span_project.classList.add(day_id);
 
             input_von.type = "time";
             input_von.value = "00:00";
@@ -174,7 +176,26 @@
         }
 
         function save_clicked() {
-            //TODO implement (send changes to server)
+            let to_save = [];
+            for (let i = 0; i < changed_entries.length; i++) {
+                let entry_id = changed_entries[i];
+                let project_nr = document.getElementById("project_input_" + entry_id).value;
+                let day_id = document.getElementById("project_name_" + entry_id).classList[0];
+                let start = day_id + "T" + document.getElementById("von_input_" + entry_id).value;
+                let end = day_id + "T" + document.getElementById("bis_input_" + entry_id).value;
+                to_save.push([entry_id, project_nr, start, end])
+            }
+            let to_save_json = JSON.stringify(to_save);
+            console.log(to_save_json);
+            let new_url = document.URL;
+            if (new_url.includes("?")) {
+                new_url += "&";
+            } else {
+                new_url += "?";
+            }
+            new_url = new_url + "save=" + encodeURI(to_save_json);
+            console.log(new_url);
+            window.location.replace(new_url);
             changed_entries = [];
             new_entries = [];
             update_save_enabling();
@@ -188,6 +209,26 @@
             document.getElementById("save_button").disabled = has_unsaved_changes();
         }
 
+        function remove_url_parameter(key, sourceURL) {
+            // from https://stackoverflow.com/a/16941754/8733066
+            let rtn = sourceURL.split("?")[0],
+                param,
+                params_arr = [],
+                queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+            if (queryString !== "") {
+                params_arr = queryString.split("&");
+                for (let i = params_arr.length - 1; i >= 0; i -= 1) {
+                    param = params_arr[i].split("=")[0];
+                    if (param === key) {
+                        params_arr.splice(i, 1);
+                    }
+                }
+                rtn = rtn + "?" + params_arr.join("&");
+            }
+            return rtn;
+        }
+
         update_save_enabling();
+        window.history.replaceState(null, null, remove_url_parameter("save", document.documentURI))
     </script>
 {% endblock %}

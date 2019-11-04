@@ -27,13 +27,18 @@ class Entity(abc.ABC):
     def from_result(column_names, fetched):
         pass
 
+    def validate(self):
+        pass
+
     def save(self):
+        self.validate()
         cur = db.conn.cursor()
         cur.execute(self.get_save_command())
         db.conn.commit()
         cur.close()
 
     def insert(self, connection=None):
+        self.validate()
         if connection is None:
             connection = db.conn
         cur = connection.cursor()

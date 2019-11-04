@@ -54,7 +54,7 @@ def generate():
         projects.append(proj)
 
     for empl_nr, project_nr, start, end in entries_data:
-        en = Entry()
+        en = Entry(project_nr, empl_nr)
         en._empl_nr = empl_nr
         en._project_nr = project_nr
         en.start = start

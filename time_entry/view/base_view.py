@@ -12,3 +12,7 @@ def get_user_context(request: WSGIRequest) -> dict:
     else:
         context = {"user_authenticated": False}
     return context
+
+
+def get_message_context(messages):
+    return {"messages": messages}
