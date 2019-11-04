@@ -127,7 +127,9 @@ def calculate_float_time(empl_nr: int) -> decimal.Decimal:
         end = min(today, empl.until)
     else:
         end = today
-    should_worked = count_work_days(empl.since, end) * decimal.Decimal(settings.get(settings.Names.SOLL_WORK_PER_DAY))
+    present_days = count_work_days(empl.since, end)
+    present_days -= count_absent_days(empl_nr)
+    should_worked = present_days * decimal.Decimal(settings.get(settings.Names.SOLL_WORK_PER_DAY))
     return worked_hours - should_worked
 
 
@@ -159,3 +161,15 @@ def collect_absences(empl_nr):
     print(command)
     cur.execute(command)
     return [absence.Absence.from_result(cur.column_names, res) for res in cur.fetchall()]
+
+
+def count_absent_days(empl_nr: int) -> int:
+    absences = collect_absences(empl_nr)
+    today = datetime.date.today()
+    count = 0
+    for ab in absences:
+        if ab.end <= today:
+            count += ab.length
+        elif ab.start <= today:  # we are inside of the absence now
+            count += (today - ab.start + datetime.timedelta(days=1)).days
+    return count

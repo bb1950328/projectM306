@@ -15,5 +15,34 @@
             <td>Austritt:</td>
             <td>{{ active_until }}</td>
         </tr>
+        <tr>
+            <td>Absenztotal:</td>
+            <td>{{ absence_total }} Tage</td>
+        </tr>
     </table>
+    <h2>Absenzen</h2>
+    {% if absences %}
+        <table>
+            <thead>
+            <tr>
+                <td>Von</td>
+                <td>Bis</td>
+                <td>Länge</td>
+                <td>Grund</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ab in absences %}
+                <tr>
+                    <td>{{ ab.start }}</td>
+                    <td>{{ ab.end }}</td>
+                    <td>{{ ab.length }}d</td>
+                    <td>{{ ab.reason }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        Keine Absenzen vorhanden.
+    {% endif %}
 {% endblock %}

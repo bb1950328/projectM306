@@ -23,7 +23,7 @@ class Absence(Entity):
         def get(attr):
             return fetched[column_names.index(attr)]
 
-        ab = Absence(get("empl_nr"), get("reason"))
+        ab = Absence(get("emplNr"), get("reason"))
         ab.id = get("id")
         ab.start = get("start_")
         ab.end = get("end_")
@@ -120,6 +120,10 @@ class Absence(Entity):
     def _get_reason(self) -> str:
         return self._reason
 
+    def _get_length(self) -> int:
+        delta = (self.end - self.start)
+        return delta.days + 1
+
     def __str__(self):
         return f"[Absenz von {util.locale_format(self.start)} bis {util.locale_format(self.end)} " \
                f"von Mitarbeiter Nr. {self._empl_nr} Grund:\"{self.reason}\"]"
@@ -128,3 +132,4 @@ class Absence(Entity):
     start = property(_get_start, _set_start)
     end = property(_get_end, _set_end)
     reason = property(_get_reason, _set_reason)
+    length = property(_get_length)

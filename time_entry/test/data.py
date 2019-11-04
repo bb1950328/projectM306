@@ -46,9 +46,9 @@ def generate():
                      settings.Names.SOLL_WORK_PER_DAY: "8.4"}
 
     absences_data = [
-        [2, datetime.date(2019, 11, 4), datetime.date(2019, 11, 4), "Krankheit 1d"],
-        [2, datetime.date(2019, 11, 7), datetime.date(2019, 11, 8), "Krankheit 2d"],
-        [4, datetime.date(2019, 11, 4), datetime.date(2019, 11, 8), "Sonstiges 5d"],
+        [2, datetime.date(2019, 11, 4), datetime.date(2019, 11, 4), "Krankheit"],
+        [2, datetime.date(2019, 11, 7), datetime.date(2019, 11, 8), "Krankheit"],
+        [4, datetime.date(2019, 11, 4), datetime.date(2019, 11, 8), "Sonstiges"],
     ]
 
     for key, value in settings_data.items():
