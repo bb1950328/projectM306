@@ -1,6 +1,14 @@
 {% extends 'base_page.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
+    <select onchange="selection_changed()" id="week_or_month_selector">
+        <option {{ selection.value_month }}>Monat</option>
+        <option {{ selection.value_week }}>Woche</option>
+    </select>
+    <button onclick="minus1_clicked()"><</button>
+    <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number">
+    <button onclick="plus1_clicked()">></button>
+    <input id="input_year" type="number" value="{{ selection.year }}">
     <table>
         <thead>
         <tr>
@@ -37,6 +45,60 @@
     <input type="button" value="Speichern" onclick="save_clicked()" id="save_button">
 
     <script>
+        function plus1_clicked() {
+            change_selection(1);
+        }
+
+        function minus1_clicked() {
+            change_selection(-1);
+        }
+
+        function change_selection(value) {
+            let week_or_month = document.getElementById("input_week_or_month");
+            let year = document.getElementById("input_year");
+            let max_value = {{ selection.max_value }};
+            let new_week_or_month = Number.parseInt(week_or_month.value) + value;
+            let new_year = Number.parseInt(year.value);
+            if (new_week_or_month <= 0) {
+                new_year--;
+                new_week_or_month += max_value;
+            } else if (new_week_or_month > max_value) {
+                new_year++;
+                new_week_or_month -= max_value;
+            }
+            week_or_month.value = new_week_or_month;
+            year.value = new_year;
+            redirect_selection();
+        }
+
+        function selection_changed() {
+            let select = document.getElementById("week_or_month_selector");
+            let mode = select.selectedIndex === 0 ? "m" : "w";
+            let week_or_month = document.getElementById("input_week_or_month");
+            let year = document.getElementById("input_year");
+            if (mode === "m") {
+                week_or_month.value = {{ selection.default_month }};
+            } else {
+                week_or_month.value = {{ selection.default_week }};
+            }
+            year.value = {{ selection.default_year }};
+            redirect_selection();
+        }
+
+        function redirect_selection() {
+            let mode = document.getElementById("week_or_month_selector").selectedIndex === 0 ? "m" : "w";
+            let week_or_month = document.getElementById("input_week_or_month");
+            let year = document.getElementById("input_year");
+            let url = "/index.html?mode=" + mode + "&year=" + year.value + "&";
+            if (mode === "m") {
+                url += "month=";
+            } else {
+                url += "week=";
+            }
+            url += week_or_month.value;
+            window.location.replace(url);
+        }
+
         function add_entry(day_id) {
             let dayrow = document.getElementById(day_id);
             let entry_id = "new" + Date.now().toString(10);
@@ -89,25 +151,29 @@
         let changed_entries = [];
         let new_entries = [];
 
-    function entry_changed(entry_id) {
-        console.log("Entry with id " + entry_id + " changed.");
-        if (!changed_entries.includes(entry_id)) {
-            changed_entries.push(entry_id);
+        function entry_changed(entry_id) {
+            console.log("Entry with id " + entry_id + " changed.");
+            if (!changed_entries.includes(entry_id)) {
+                changed_entries.push(entry_id);
+                update_save_enabling();
+            }
+        }
+
+        function save_clicked() {
+            //TODO implement (send changes to server)
+            changed_entries = [];
+            new_entries = [];
             update_save_enabling();
         }
-    }
 
-    function save_clicked() {
-        //TODO implement (send changes to server)
-        changed_entries = [];
-        new_entries = [];
+        function has_unsaved_changes() {
+            return changed_entries.length === 0 && new_entries.length === 0;
+        }
+
+        function update_save_enabling() {
+            document.getElementById("save_button").disabled = has_unsaved_changes();
+        }
+
         update_save_enabling();
-    }
-
-    function update_save_enabling() {
-        document.getElementById("save_button").disabled = (changed_entries.length === 0 && new_entries.length === 0);
-    }
-
-    update_save_enabling();
     </script>
 {% endblock %}

@@ -21,8 +21,8 @@ def index(request: WSGIRequest):
 
 def generate_entries_context(empl_nr: int, GET) -> dict:
     mode = GET.get("mode")
+    now = datetime.datetime.now()
     if mode is None:
-        now = datetime.datetime.now()
         year = now.year
         month = now.month
         mode = "m"
@@ -61,7 +61,18 @@ def generate_entries_context(empl_nr: int, GET) -> dict:
             days[day].append(con)
         except KeyError:
             days[day] = [con]
-    context = {"days": []}
+    context = {"days": [],
+               "now": now,
+               "selection": {
+                   "value_month": "selected" if mode == "m" else "",
+                   "value_week": "selected" if mode == "w" else "",
+                   "week_or_month": month if mode == "m" else week,
+                   "year": year,
+                   "max_value": 12 if mode == "m" else 52,
+                   "default_month": now.month,
+                   "default_week": int(now.date().strftime("%W")),
+                   "default_year": now.year,
+               }}
     for day, entries in days.items():
         context["days"].append(
             {"id": day.isoformat(),
