@@ -1,5 +1,6 @@
 # coding=utf-8
 import datetime
+import json
 
 from django.contrib.auth.models import User
 
@@ -59,3 +60,11 @@ def collect_entries(empl_nr: int, start: datetime.datetime, end: datetime.dateti
     print(command)
     cur.execute(command)
     return [entry.Entry.from_result(cur.column_names, res) for res in cur.fetchall()]
+
+
+def get_all_projects_as_json() -> str:
+    cur = db.conn.cursor()
+    cur.execute(f"SELECT nr, name_ FROM {Project.Table.name}")
+    result = {int(row[0]): row[1] for row in cur.fetchall()}
+    cur.close()
+    return json.dumps(result)

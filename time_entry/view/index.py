@@ -3,8 +3,9 @@ import datetime
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
-
 # TODO https://docs.djangoproject.com/en/2.2/topics/auth/default/#authentication-in-web-requests
+from django.utils.safestring import mark_safe
+
 from time_entry.model import model
 from time_entry.view import base_view, login
 
@@ -15,6 +16,7 @@ def index(request: WSGIRequest):
     context = {
         **base_view.get_user_context(request),
         **generate_entries_context(request.user.get_username(), request.GET),
+        "project_names": mark_safe(model.get_all_projects_as_json()),
     }
     return render(request, "index.html", context)
 
@@ -78,4 +80,15 @@ def generate_entries_context(empl_nr: int, GET) -> dict:
             {"id": day.isoformat(),
              "displayName": day.strftime("%a, %d.%m.%Y"),
              "entries": entries})
+
+    iday = start.date()
+    oneday = datetime.timedelta(days=1)
+    while iday < end.date():
+        if iday not in days.keys():
+            context["days"].append(
+                {"id": iday.isoformat(),
+                 "displayName": iday.strftime("%a, %d.%m.%Y"),
+                 "entries": []})
+        iday += oneday
+    context["days"].sort(key=lambda d: d["id"])
     return context

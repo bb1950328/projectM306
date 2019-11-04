@@ -6,9 +6,9 @@
         <option {{ selection.value_week }}>Woche</option>
     </select>
     <button onclick="minus1_clicked()"><</button>
-    <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number">
+    <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number" onchange="change_selection(0)">
     <button onclick="plus1_clicked()">></button>
-    <input id="input_year" type="number" value="{{ selection.year }}">
+    <input id="input_year" type="number" value="{{ selection.year }}" onchange="change_selection(0)">
     <table>
         <thead>
         <tr>
@@ -45,6 +45,9 @@
     <input type="button" value="Speichern" onclick="save_clicked()" id="save_button">
 
     <script>
+
+        let project_names = {{project_names}};
+
         function plus1_clicked() {
             change_selection(1);
         }
@@ -111,9 +114,7 @@
             let input_bis = document.createElement("input");
             let span_project = document.createElement("span");
 
-            let event_func = function event_handler() {
-                entry_changed(entry_id);
-            }; // TODO basil function should be called
+            let event_func = "entry_changed(\"" + entry_id + "\")";
 
             tr.appendChild(td_project);
             tr.appendChild(td_von);
@@ -146,6 +147,7 @@
             dayrow.after(tr);
             new_entries.push(entry_id);
             update_save_enabling();
+            entry_changed(entry_id);
         }
 
         let changed_entries = [];
@@ -156,6 +158,18 @@
             if (!changed_entries.includes(entry_id)) {
                 changed_entries.push(entry_id);
                 update_save_enabling();
+            }
+            let p_input = document.getElementById("project_input_" + entry_id);
+            let p_span = document.getElementById("project_name_" + entry_id);
+            let p_number = Number.parseInt(p_input.value);
+            p_span.innerText = project_names[p_number];
+            if (p_span.innerText === "undefined") {
+                p_span.innerText = "Ungültig!";
+                p_span.style.color = "#ff0000";
+                p_input.style.backgroundColor = "#ff0000";
+            } else {
+                p_span.style.color = "#000000";
+                p_input.style.backgroundColor = "";
             }
         }
 
