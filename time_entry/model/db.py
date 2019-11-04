@@ -1,5 +1,4 @@
 # coding=utf-8
-from typing import Optional
 
 
 def name_is_main():
@@ -14,6 +13,7 @@ if name_is_main():
 import logging
 import re
 import sys
+from typing import Optional
 
 from django.contrib.auth.models import User
 from mysql import connector
@@ -22,6 +22,7 @@ from mysql.connector import DatabaseError, MySQLConnection
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
 import time_entry.model.entity.project as project
+from time_entry.model.entity import setting
 
 logging.getLogger().setLevel(logging.DEBUG)
 conn: Optional[MySQLConnection] = None
@@ -37,7 +38,8 @@ class Const(object):
         "port": 3306,
     }
 
-    all_entities = [employee.Employee,
+    all_entities = [setting.Setting,
+                    employee.Employee,
                     project.Project,
                     entry.Entry,
                     ]

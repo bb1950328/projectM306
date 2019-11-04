@@ -3,7 +3,7 @@ import datetime
 from typing import Optional
 
 import time_entry.model.entity.employee as employee
-from time_entry.model import validate, util, db, model
+from time_entry.model import validate, util, db, model, settings
 from time_entry.model.entity.entity import Entity
 from time_entry.model.entity.project import Project
 
@@ -72,9 +72,12 @@ class Entry(Entity):
             if self.collides_with(en):
                 raise ValueError(f"{self} kollidiert mit {en}")
         sum_work_hours = sum_work.total_seconds() / 3600
-        if sum_work_hours > self.MAX_WORK_PER_DAY:
+        max_work_per_day = float(settings.get(settings.Names.MAX_WORK_PER_DAY))
+        if sum_work_hours > max_work_per_day:
             raise ValueError(f"Sie dürfen am {self.start.strftime('%d.%m.%Y')} "
-                             f"höchstens {self.MAX_WORK_PER_DAY}h arbeiten!")
+                             f"höchstens {max_work_per_day}h arbeiten!")
+        if self.getProject() is None:
+            raise ValueError(f"Das Projekt mit der Nummer {self._project_nr} existiert nicht!")
 
     _id: Optional[int]
     _empl_nr: Optional[int]
@@ -83,8 +86,6 @@ class Entry(Entity):
     _project: Optional[Project]
     _start: Optional[datetime.datetime]
     _end: Optional[datetime.datetime]
-
-    MAX_WORK_PER_DAY = 12  # hours
 
     class Table(object):
         name = "entry"

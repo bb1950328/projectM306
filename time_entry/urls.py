@@ -15,14 +15,20 @@ Including another URLconf
 """
 from django.urls import path
 
-from time_entry.view import index, login
+from time_entry.view import index, login, employee_view
+
+
+def gen(url, func):
+    return [path(url, func),
+            path(url + "/", func),
+            path(url + ".html", func),
+            path(url + ".html/", func)]
+
 
 urlpatterns = [
     path("", index.index),
-    path("index", index.index),
-    path("index.html", index.index),
-    path("login", login.login),
-    path("login.html", login.login),
-    path("logout", login.logout),
-    path("logout.html", login.logout),
+    *gen("index", index.index),
+    *gen("login", login.login),
+    *gen("logout", login.logout),
+    *gen("employee", employee_view.view)
 ]

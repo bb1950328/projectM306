@@ -7,6 +7,9 @@ class Project(Entity):
 
     @staticmethod
     def from_result(column_names, fetched):
+        if fetched is None:
+            return None
+
         def get(attr):
             return fetched[column_names.index(attr)]
 

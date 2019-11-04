@@ -1,5 +1,6 @@
 # coding=utf-8
 import datetime
+import decimal
 import json
 import urllib
 from typing import Optional, List
@@ -8,7 +9,7 @@ from django.contrib.auth.models import User
 
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
-from time_entry.model import db, util
+from time_entry.model import db, util, settings
 from time_entry.model.entity.project import Project
 
 
@@ -93,6 +94,38 @@ def get_all_projects_as_json() -> str:
     result = {int(row[0]): row[1] for row in cur.fetchall()}
     cur.close()
     return json.dumps(result)
+
+
+def calculate_worked_hours(empl_nr: int) -> float:
+    cur = db.conn.cursor()
+    cur.execute(f"SELECT SUM(TIMEDIFF(end_, start_)) FROM {entry.Entry.Table.name} "
+                f"where emplNr={empl_nr} AND end_ < {util.date_to_sql(datetime.date.today())}")
+    res = cur.fetchone()[0]
+    if res is None:
+        res = decimal.Decimal("0")
+    return res / 10_000  # TIMEDIFF() returns 10'000 per hour
+
+
+def count_work_days(start: datetime.date, end: datetime.date) -> int:
+    count = 0
+    oneday = datetime.timedelta(days=1)
+    while start <= end:
+        if util.is_work_day(start):
+            count += 1
+        start += oneday
+    return count
+
+
+def calculate_float_time(empl_nr: int) -> decimal.Decimal:
+    empl = employee.Employee.find(empl_nr)
+    worked_hours = calculate_worked_hours(empl_nr)
+    today = datetime.date.today()
+    if empl.until:
+        end = min(today, empl.until)
+    else:
+        end = today
+    should_worked = count_work_days(empl.since, end) * decimal.Decimal(settings.get(settings.Names.SOLL_WORK_PER_DAY))
+    return worked_hours - should_worked
 
 
 def save_changes(empl_nr, GET) -> Optional[List[str]]:

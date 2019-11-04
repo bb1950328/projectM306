@@ -1,0 +1,19 @@
+{% extends 'base_page.html' %}
+{% block title %}{{ firstName }} {{ lastName }}{% endblock %}
+{% block content %}
+    <h1>{{ firstName }} {{ lastName }}</h1>
+    <table>
+        <tr>
+            <td>Gleitzeitsaldo:</td>
+            <td>{{ float_time_total }}</td>
+        </tr>
+        <tr>
+            <td>Eintritt:</td>
+            <td>{{ active_since }}</td>
+        </tr>
+        <tr>
+            <td>Austritt:</td>
+            <td>{{ active_until }}</td>
+        </tr>
+    </table>
+{% endblock %}

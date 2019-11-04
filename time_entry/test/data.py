@@ -1,6 +1,8 @@
 # coding=utf-8
 import datetime
 
+from time_entry.model import settings
+from time_entry.model.entity import setting
 from time_entry.model.entity.employee import Employee
 from time_entry.model.entity.entry import Entry
 from time_entry.model.entity.project import Project
@@ -17,11 +19,12 @@ def generate():
     if _generated:
         return
 
-    employees_data = [[1, "Jan", "Kläger"],
-                      [2, "Joel", "Suhner"],
-                      [3, "Basil", "Bader"],
-                      [4, "Marc", "Rusch"],
-                      [5, "Quentin", "Weber"],
+    first_nov_2019 = datetime.date(2019, 11, 1)
+    employees_data = [[1, "Jan", "Kläger", first_nov_2019, None],
+                      [2, "Joel", "Suhner", first_nov_2019, None],
+                      [3, "Basil", "Bader", first_nov_2019, None],
+                      [4, "Marc", "Rusch", first_nov_2019, None],
+                      [5, "Quentin", "Weber", first_nov_2019, datetime.date(2019, 12, 31)],
                       ]
 
     projects_data = [[1, "Test", "Dies ist wirklich nur ein Test"],
@@ -31,19 +34,30 @@ def generate():
                      [5, "Modul403", "Prozedurales programmieren mit C"],
                      ]
 
-    entries_data = [[1, 1, datetime.datetime(2019, 10, 25, 7, 25, 0), datetime.datetime(2019, 10, 25, 11, 55, 30)],
-                    [1, 2, datetime.datetime(2019, 10, 25, 13, 0, 0), datetime.datetime(2019, 10, 25, 16, 12, 59)],
-                    [2, 3, datetime.datetime(2019, 10, 25, 13, 15, 0), datetime.datetime(2019, 10, 25, 17, 59, 59)],
-                    [3, 3, datetime.datetime(2019, 10, 26, 8, 15, 0), datetime.datetime(2019, 10, 26, 12, 16, 17)],
-                    [1, 1, datetime.datetime(2019, 10, 26, 3, 15, 0), datetime.datetime(2019, 10, 26, 12, 1, 17)],
-                    [1, 1, datetime.datetime(2019, 10, 28, 14, 35, 0), datetime.datetime(2019, 10, 28, 18, 19, 17)],
+    entries_data = [[1, 1, datetime.datetime(2019, 11, 1, 7, 25, 0), datetime.datetime(2019, 11, 1, 11, 55, 30)],
+                    [1, 2, datetime.datetime(2019, 11, 1, 13, 0, 0), datetime.datetime(2019, 11, 1, 16, 12, 59)],
+                    [2, 3, datetime.datetime(2019, 11, 1, 13, 15, 0), datetime.datetime(2019, 11, 1, 17, 59, 59)],
+                    [3, 3, datetime.datetime(2019, 11, 4, 8, 15, 0), datetime.datetime(2019, 11, 4, 12, 16, 17)],
+                    [1, 1, datetime.datetime(2019, 11, 4, 3, 15, 0), datetime.datetime(2019, 11, 4, 12, 1, 17)],
+                    [1, 1, datetime.datetime(2019, 11, 5, 14, 35, 0), datetime.datetime(2019, 11, 5, 18, 19, 17)],
                     ]
 
-    for empl_nr, first_name, last_name in employees_data:
+    settings_data = {settings.Names.MAX_WORK_PER_DAY: "12",
+                     settings.Names.SOLL_WORK_PER_DAY: "8.4"}
+
+    for key, value in settings_data.items():
+        se = setting.Setting()
+        se.key = key
+        se.value = value
+        entries.append(se)
+
+    for empl_nr, first_name, last_name, since, until in employees_data:
         empl = Employee()
         empl.emplNr = empl_nr
         empl.firstName = first_name
         empl.lastName = last_name
+        empl.since = since
+        empl.until = until
         employees.append(empl)
 
     for nr, name, desc in projects_data:
