@@ -160,7 +160,7 @@ def collect_absences(empl_nr, sort=False):
     command = f"SELECT * FROM {absence.Absence.Table.name} WHERE emplNr={empl_nr}"
     print(command)
     cur.execute(command)
-    res =  [absence.Absence.from_result(cur.column_names, res) for res in cur.fetchall()]
+    res = [absence.Absence.from_result(cur.column_names, res) for res in cur.fetchall()]
     if sort:
         res.sort(key=lambda ab: ab.start)
     return res

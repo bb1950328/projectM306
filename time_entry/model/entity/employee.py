@@ -5,10 +5,26 @@ import time_entry.model as model
 from time_entry.model.entity.entity import Entity
 
 
+class Role(object):
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+
+Role.ADMIN = Role("admin", "Administrator")
+Role.HR = Role("hr", "Human Resources Manager")
+Role.CEO = Role("ceo", "Geschäftsleiter")
+Role.BOSS = Role("boss", "Chef")
+
+
 class Employee(Entity):
 
     def __init__(self) -> None:
         self._roles = set()
+
+    def has_role(self, role: Role):
+        return role.name in self.roles
 
     def insert(self, connection=None):
         super().insert(connection)
@@ -25,6 +41,7 @@ class Employee(Entity):
         empl.lastName = get("lastName")
         empl.since = get("since")
         empl.until = get("until")
+        empl.roles = set(get("roles").split(";"))
         return empl
 
     @staticmethod
@@ -34,14 +51,16 @@ class Employee(Entity):
         return Employee.from_result(cur.column_names, cur.fetchone())
 
     def get_insert_command(self):
-        return f"INSERT INTO {self.Table.name} (emplNr, firstName, lastName, since, until) VALUES " \
+        roles = ";".join(self.roles)
+        return f"INSERT INTO {self.Table.name} (emplNr, firstName, lastName, since, until, roles) VALUES " \
                f"({self.emplNr}, '{self.firstName}', '{self.lastName}', " \
-               f"{model.util.date_to_sql(self.since)}, {model.util.date_to_sql(self.until)})"
+               f"{model.util.date_to_sql(self.since)}, {model.util.date_to_sql(self.until)}, '{roles}')"
 
     def get_save_command(self):
+        roles = ";".join(self.roles)
         return f"UPDATE {self.Table.name} SET firstName='{self.firstName}', lastName='{self.lastName}', " \
-               f"since={model.util.date_to_sql(self.since)}, until={model.util.date_to_sql(self.until)}" \
-               f"WHERE emplNr={self.emplNr}"
+               f"since={model.util.date_to_sql(self.since)}, until={model.util.date_to_sql(self.until)}, " \
+               f"roles='{roles}' WHERE emplNr={self.emplNr}"
 
     _empl_nr: int
     _first_name: str
