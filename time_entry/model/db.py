@@ -17,7 +17,7 @@ from typing import Optional
 
 from django.contrib.auth.models import User
 from mysql import connector
-from mysql.connector import DatabaseError, MySQLConnection
+from mysql.connector import DatabaseError, MySQLConnection, ProgrammingError
 
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
@@ -52,7 +52,7 @@ def connect_to_database():
         conn = connector.connect(database=Const.database_name,
                                  **Const.connect_params,
                                  )
-    except ValueError:
+    except ProgrammingError:
         conn = None
 
 
