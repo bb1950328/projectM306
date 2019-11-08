@@ -14,5 +14,11 @@ def get_user_context(request: WSGIRequest) -> dict:
     return context
 
 
-def get_message_context(messages):
-    return {"messages": messages}
+def get_message_context(messages, good_news=False):
+    if isinstance(messages, str):
+        messages = [messages]
+    return {
+        "messages": messages,
+        "msg_class": "green" if good_news else "red",
+        "message_title": "Hinweis" if good_news else "Achtung!",
+    }

@@ -18,8 +18,8 @@
 {% if messages %}
     <div id="message_box_background">
     </div>
-    <div id="message_box">
-        <h3>Achtung!</h3>
+    <div id="message_box" class="message_box_{{ msg_class }}">
+        <h3>{{ message_title }}</h3>
         <ul>
             {% for msg in messages %}
                 <li>{{ msg }}</li>

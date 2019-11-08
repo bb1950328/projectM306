@@ -50,8 +50,8 @@ class Absence(Entity):
                f" WHERE id={self.id}"
 
     def collides_with(self, other, fromself=False):
-        start_inside = self.start < other.start < self.end
-        end_inside = self.start < other.end < self.end
+        start_inside = self.start <= other.start <= self.end
+        end_inside = self.start <= other.end <= self.end
         from_other = other.collides_with(self, fromself=True) if not fromself else False
         return start_inside or end_inside or from_other
 

@@ -173,3 +173,12 @@ def count_absent_days(empl_nr: int) -> int:
         elif ab.start <= today:  # we are inside of the absence now
             count += (today - ab.start + datetime.timedelta(days=1)).days
     return count
+
+
+def add_absence(POST):
+    ab = absence.Absence()
+    ab._empl_nr = int(POST.get("emplNr"))
+    ab.reason = POST.get("reason")
+    ab.start = datetime.date.fromisoformat(POST.get("start"))
+    ab.end = datetime.date.fromisoformat(POST.get("end"))
+    ab.insert()

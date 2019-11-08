@@ -23,8 +23,14 @@
     margin: auto;
     width: fit-content;
     height: fit-content;
+}
 
+.message_box_red {
     background-color: red;
+}
+
+.message_box_green {
+    background-color: darkgreen;
 }
 
 #message_box_background {

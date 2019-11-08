@@ -1,0 +1,29 @@
+{% extends 'base_page.html' %}
+{% block title %}Neue Absenz{% endblock %}
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+        <table>
+            <tr>
+                <td>Mitarbeiternummer</td>
+                <td><input type="number" id="input_empl_nr" name="emplNr" value="{{ default_empl_nr }}"></td>
+            </tr>
+            <tr>
+                <td>Von:</td>
+                <td><input type="date" id="input_start" name="start" value="{{ default_start }}"></td>
+            </tr>
+            <tr>
+                <td>Bis und mit:</td>
+                <td><input type="date" id="input_end" name="end" value="{{ default_end }}"></td>
+            </tr>
+            <tr>
+                <td>Grund:</td>
+                <td><input type="text" id="input_reason" name="reason"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Absenz erstellen"></td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}
