@@ -1,10 +1,10 @@
-#Projekt M306 (Zeiterfassung)
+# Projekt M306 (Zeiterfassung)
 
-##How to Projekt einrichten
+## How to Projekt einrichten
 
 Zur Vorbereitung mysql Server installieren. Als Passwort für root zur Einfachheit halber "root" wählen.
 
-###Mit PyCharm
+### Mit PyCharm
 
 1. Mit VCS -> Check out from version control -> Git
  <https://github.com/bb1950328/projectM306.git>
@@ -13,7 +13,7 @@ Zur Vorbereitung mysql Server installieren. Als Passwort für root zur Einfachhe
 2. Run configuration "setup_database() && insert_test_data()" starten
 4. Run configuration "project M306" starten
 
-###Ohne PyCharm
+### Ohne PyCharm
 
 1. Mit Git auschecken: <https://github.com/bb1950328/projectM306.git>
 2. venv.zip in Unterordner venv/ entpacken
@@ -28,6 +28,6 @@ Zur Vorbereitung mysql Server installieren. Als Passwort für root zur Einfachhe
    `python manage.py runserver 8000`
    
 
-##Ausprobieren
+## Ausprobieren
 
 Die Seite ist unter <http://127.0.0.1:8000/> abrufbar.
