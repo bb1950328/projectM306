@@ -12,7 +12,7 @@ from time_entry.view import base_view
 def view(request: WSGIRequest):
     empl_nr = request.GET.get("empl_nr")
     empl = employee.Employee.find(empl_nr)
-    absences_list = model.collect_absences(empl_nr)
+    absences_list = model.collect_absences(empl_nr, sort=True)
     absences = []
     for ab in absences_list:
         aab = {

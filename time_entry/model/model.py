@@ -155,12 +155,15 @@ def save_changes(empl_nr, GET) -> Optional[List[str]]:
     return messages if messages else None
 
 
-def collect_absences(empl_nr):
+def collect_absences(empl_nr, sort=False):
     cur = db.conn.cursor()
     command = f"SELECT * FROM {absence.Absence.Table.name} WHERE emplNr={empl_nr}"
     print(command)
     cur.execute(command)
-    return [absence.Absence.from_result(cur.column_names, res) for res in cur.fetchall()]
+    res =  [absence.Absence.from_result(cur.column_names, res) for res in cur.fetchall()]
+    if sort:
+        res.sort(key=lambda ab: ab.start)
+    return res
 
 
 def count_absent_days(empl_nr: int) -> int:

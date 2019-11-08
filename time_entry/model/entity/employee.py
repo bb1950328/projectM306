@@ -7,6 +7,9 @@ from time_entry.model.entity.entity import Entity
 
 class Employee(Entity):
 
+    def __init__(self) -> None:
+        self._roles = set()
+
     def insert(self, connection=None):
         super().insert(connection)
         model.model.add_user(str(self.emplNr), self.firstName)
@@ -45,6 +48,7 @@ class Employee(Entity):
     _last_name: str
     _since: datetime.date
     _until: datetime.date
+    _roles: set
 
     class Table(object):
         name = "employee"
@@ -54,6 +58,7 @@ class Employee(Entity):
             emplNr int not null,
             firstName VARCHAR(255) not null,
             lastName VARCHAR(255) not null,
+            roles VARCHAR(255) not null,
             since DATE not null,
             until DATE
         );
@@ -97,8 +102,15 @@ class Employee(Entity):
     def _set_until(self, until: datetime.date) -> None:
         self._until = until
 
+    def _set_roles(self, roles: set) -> None:
+        self._roles = roles
+
+    def _get_roles(self) -> set:
+        return self.roles
+
     emplNr = property(_get_empl_nr, _set_empl_nr)
     firstName = property(_get_first_name, _set_first_name)
     lastName = property(_get_last_name, _set_last_name)
     since = property(_get_since, _set_since)
     until = property(_get_until, _set_until)
+    roles = property(_get_roles, _set_roles)
