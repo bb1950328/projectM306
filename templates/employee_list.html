@@ -1,0 +1,26 @@
+{% extends 'base_page.html' %}
+{% block title %}Mitarbeiter{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+        <tr>
+            <td><a href="employee.html?sort=nr_{{ updown_nr }}"> Nr. {{ updown_arrow_nr }}</a></td>
+            <td><a href="employee.html?sort=firstname_{{ updown_firstname }}"> Vorname {{ updown_arrow_firstname }}</a>
+            </td>
+            <td><a href="employee.html?sort=lastname_{{ updown_lastname }}"> Nachname {{ updown_arrow_lastname }}</a>
+            </td>
+            <td><a href="employee.html?sort=ftime_{{ updown_ftime }}"> Gleitzeitsaldo {{ updown_arrow_ftime }}</a></td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for empl in employees %}
+            <tr>
+                <td><a href="employee.html?empl_nr={{ empl.emplNr }}">{{ empl.emplNr }}</a></td>
+                <td>{{ empl.firstName }}</td>
+                <td>{{ empl.lastName }}</td>
+                <td>{{ empl.floatTime }}h</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

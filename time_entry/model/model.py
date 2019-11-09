@@ -185,3 +185,11 @@ def add_absence(POST):
     ab.start = datetime.date.fromisoformat(POST.get("start"))
     ab.end = datetime.date.fromisoformat(POST.get("end"))
     ab.insert()
+
+
+def collect_employees():
+    cur = db.conn.cursor()
+    cur.execute(f"SELECT * FROM {employee.Employee.Table.name}")
+    result = [employee.Employee.from_result(cur.column_names, row) for row in cur.fetchall()]
+    cur.close()
+    return result

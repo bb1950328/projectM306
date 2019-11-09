@@ -18,6 +18,25 @@ Role.CEO = Role("ceo", "Geschäftsleiter")
 Role.BOSS = Role("boss", "Chef")
 
 
+class Permission(object):
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    @staticmethod
+    def _in_employee(roles, employee) -> bool:
+        for r in roles:
+            if r in employee.roles:
+                return True
+        return False
+
+    @staticmethod
+    def can_view_employee_list(employee):
+        roles = (Role.ADMIN, Role.HR, Role.CEO, Role.BOSS)
+        return Permission._in_employee(roles, employee)
+
+
 class Employee(Entity):
 
     def __init__(self) -> None:
@@ -125,7 +144,7 @@ class Employee(Entity):
         self._roles = roles
 
     def _get_roles(self) -> set:
-        return self.roles
+        return self._roles
 
     emplNr = property(_get_empl_nr, _set_empl_nr)
     firstName = property(_get_first_name, _set_first_name)
