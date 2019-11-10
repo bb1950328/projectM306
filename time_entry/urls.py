@@ -31,4 +31,5 @@ urlpatterns = [
     *gen("logout", login.logout),
     *gen("employee", employee_view.view),
     *gen("new_absence", employee_view.new_absence),
+    *gen("no_permission", index.no_permission),
 ]

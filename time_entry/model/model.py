@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 import time_entry.model.entity.absence as absence
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
-from time_entry.model import db, util, settings
+from time_entry.model import db, util, config
 from time_entry.model.entity.project import Project
 
 
@@ -129,7 +129,7 @@ def calculate_float_time(empl_nr: int) -> decimal.Decimal:
         end = today
     present_days = count_work_days(empl.since, end)
     present_days -= count_absent_days(empl_nr)
-    should_worked = present_days * decimal.Decimal(settings.get(settings.Names.SOLL_WORK_PER_DAY))
+    should_worked = present_days * decimal.Decimal(config.get(config.Names.SOLL_WORK_PER_DAY))
     return worked_hours - should_worked
 
 

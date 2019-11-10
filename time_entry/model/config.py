@@ -1,4 +1,5 @@
 # coding=utf-8
+import os
 
 from time_entry.model.entity import setting
 
@@ -21,3 +22,7 @@ def set(key: str, value: str) -> None:
         se.insert()
     se.value = value
     se.save()
+
+
+def get_base_path():
+    return os.path.abspath(os.path.join(__file__, ".."))

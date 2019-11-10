@@ -16,6 +16,7 @@ Role.ADMIN = Role("admin", "Administrator")
 Role.HR = Role("hr", "Human Resources Manager")
 Role.CEO = Role("ceo", "Geschäftsleiter")
 Role.BOSS = Role("boss", "Chef")
+Role.EMPLOYEE = Role("employee", "Mitarbeiter")
 
 
 class Permission(object):
@@ -34,6 +35,21 @@ class Permission(object):
     @staticmethod
     def can_view_employee_list(employee):
         roles = (Role.ADMIN, Role.HR, Role.CEO, Role.BOSS)
+        return Permission._in_employee(roles, employee)
+
+    @staticmethod
+    def can_view_employee_details(employee):
+        roles = (Role.ADMIN, Role.HR, Role.CEO, Role.BOSS)
+        return Permission._in_employee(roles, employee)
+
+    @staticmethod
+    def can_edit_employee_details(employee):
+        roles = (Role.ADMIN, Role.HR, Role.CEO)
+        return Permission._in_employee(roles, employee)
+
+    @staticmethod
+    def can_add_absence(employee):
+        roles = (Role.ADMIN, Role.HR, Role.CEO)
         return Permission._in_employee(roles, employee)
 
 
@@ -60,7 +76,7 @@ class Employee(Entity):
         empl.lastName = get("lastName")
         empl.since = get("since")
         empl.until = get("until")
-        empl.roles = set(get("roles").split(";"))
+        empl.roles = set(get("roles").split("+"))
         return empl
 
     @staticmethod
@@ -70,13 +86,13 @@ class Employee(Entity):
         return Employee.from_result(cur.column_names, cur.fetchone())
 
     def get_insert_command(self):
-        roles = ";".join(self.roles)
+        roles = "+".join(self.roles)
         return f"INSERT INTO {self.Table.name} (emplNr, firstName, lastName, since, until, roles) VALUES " \
                f"({self.emplNr}, '{self.firstName}', '{self.lastName}', " \
                f"{model.util.date_to_sql(self.since)}, {model.util.date_to_sql(self.until)}, '{roles}')"
 
     def get_save_command(self):
-        roles = ";".join(self.roles)
+        roles = "+".join(self.roles)
         return f"UPDATE {self.Table.name} SET firstName='{self.firstName}', lastName='{self.lastName}', " \
                f"since={model.util.date_to_sql(self.since)}, until={model.util.date_to_sql(self.until)}, " \
                f"roles='{roles}' WHERE emplNr={self.emplNr}"

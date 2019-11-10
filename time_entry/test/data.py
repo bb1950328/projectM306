@@ -1,7 +1,7 @@
 # coding=utf-8
 import datetime
 
-from time_entry.model import settings
+from time_entry.model import config
 from time_entry.model.entity import setting, absence
 from time_entry.model.entity.employee import Employee
 from time_entry.model.entity.entry import Entry
@@ -42,8 +42,8 @@ def generate():
                     [1, 1, datetime.datetime(2019, 11, 5, 14, 35, 0), datetime.datetime(2019, 11, 5, 18, 19, 17)],
                     ]
 
-    settings_data = {settings.Names.MAX_WORK_PER_DAY: "12",
-                     settings.Names.SOLL_WORK_PER_DAY: "8.4"}
+    settings_data = {config.Names.MAX_WORK_PER_DAY: "12",
+                     config.Names.SOLL_WORK_PER_DAY: "8.4"}
 
     absences_data = [
         [2, datetime.date(2019, 11, 4), datetime.date(2019, 11, 4), "Krankheit"],

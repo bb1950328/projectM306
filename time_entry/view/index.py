@@ -1,7 +1,9 @@
 # coding=utf-8
 import datetime
+from typing import List
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
 
@@ -9,11 +11,15 @@ from time_entry.model import model
 from time_entry.view import base_view, login
 
 
-def index(request: WSGIRequest):
+def index(request: WSGIRequest, messages: List[str] = None):
+    if messages is None:
+        messages = []
     if not request.user.is_authenticated:
         return redirect(login.login)
     empl_nr = int(request.user.get_username())
-    messages = model.save_changes(empl_nr, request.GET)
+    save_msgs = model.save_changes(empl_nr, request.GET)
+    if save_msgs:
+        messages.extend(save_msgs)
     context = {
         **base_view.get_user_context(request),
         **base_view.get_message_context(messages),
@@ -94,3 +100,7 @@ def generate_entries_context(empl_nr: int, GET) -> dict:
         iday += oneday
     context["days"].sort(key=lambda d: d["id"])
     return context
+
+
+def no_permission(request: WSGIRequest) -> HttpResponse:
+    return render(request, "no_permission.html", base_view.get_user_context(request))
