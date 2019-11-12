@@ -1,4 +1,8 @@
 # coding=utf-8
+import json
+import os
+
+from time_entry.model import config
 
 
 def name_is_main():
@@ -31,12 +35,7 @@ conn: Optional[MySQLConnection] = None
 class Const(object):
     database_name = "time_entry"
 
-    connect_params = {
-        "user": "root",
-        "password": "root",
-        "host": "localhost",
-        "port": 3306,
-    }
+    connect_params = json.load(open(os.path.join(config.get_base_path(), "..", "database_settings.json")))
 
     all_entities = [setting.Setting,
                     employee.Employee,
