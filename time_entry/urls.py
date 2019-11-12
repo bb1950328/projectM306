@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from time_entry.view import index, login, employee_view
+from time_entry.view import index, login, employee_view, admin
 
 
 def gen(url, func):
@@ -32,4 +32,6 @@ urlpatterns = [
     *gen("employee", employee_view.view),
     *gen("new_absence", employee_view.new_absence),
     *gen("no_permission", index.no_permission),
+    *gen("admin", admin.admin),
+    *gen("git_pull", admin.git_pull),
 ]

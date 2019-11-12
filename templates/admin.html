@@ -1,0 +1,35 @@
+{% extends 'base_page.html' %}
+{% block title %}Logout{% endblock %}
+{% block content %}
+    <h1>Admin</h1>
+    <h2>Git</h2>
+    <table>
+        <thead>
+        <tr>
+            <td>Datum</td>
+            <td>Autor</td>
+            <td>Hash</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entry in git_log %}
+            <tr>
+                <td>{{ entry.date }}</td>
+                <td>{{ entry.author }}</td>
+                <td>{{ entry.hash }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="run_git_pull()">'git pull' ausführen</button>
+    <span id="message_span"></span>
+    <script>
+        function run_git_pull() {
+            let req = new XMLHttpRequest();
+            req.open("GET", "/git_pull", false);
+            req.send();
+            let msg_span = document.getElementById("message_span");
+            msg_span.innerText = req.response;
+        }
+    </script>
+{% endblock %}

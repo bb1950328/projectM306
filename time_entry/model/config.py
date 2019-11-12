@@ -25,4 +25,8 @@ def set(key: str, value: str) -> None:
 
 
 def get_base_path():
-    return os.path.abspath(os.path.join(__file__, ".."))
+    return os.path.abspath(os.path.join(__file__, "..", ".."))
+
+
+def get_example_data_folder():
+    return os.path.join(get_base_path(), "example_data")
