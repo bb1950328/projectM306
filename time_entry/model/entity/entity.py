@@ -32,9 +32,9 @@ class Entity(abc.ABC):
 
     def save(self):
         self.validate()
-        cur = db.conn.cursor()
+        cur = db.get_conn().cursor()
         cur.execute(self.get_save_command())
-        db.conn.commit()
+        db.get_conn().commit()
         cur.close()
 
     def insert(self, connection=None):

@@ -31,7 +31,7 @@ class Absence(Entity):
 
     @staticmethod
     def find(id):
-        cur = db.conn.cursor()
+        cur = db.get_conn().cursor()
         cur.execute(f"SELECT * FROM {Absence.Table.name} WHERE id={id}")
         return Absence.from_result(cur.column_names, cur.fetchone())
 

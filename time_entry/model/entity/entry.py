@@ -32,7 +32,7 @@ class Entry(Entity):
 
     @staticmethod
     def find(id):
-        cur = db.conn.cursor()
+        cur = db.get_conn().cursor()
         cur.execute(f"SELECT * FROM {Entry.Table.name} WHERE id={id}")
         return Entry.from_result(cur.column_names, cur.fetchone())
 

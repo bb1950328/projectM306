@@ -79,7 +79,7 @@ def reset_password(username, new_password):
 
 
 def collect_entries(empl_nr: int, start: datetime.datetime, end: datetime.datetime):
-    cur = db.conn.cursor()
+    cur = db.get_conn().cursor()
     sql_start = util.datetime_to_sql(start)
     sql_end = util.datetime_to_sql(end)
     command = f"SELECT * FROM {entry.Entry.Table.name} " \
@@ -90,7 +90,7 @@ def collect_entries(empl_nr: int, start: datetime.datetime, end: datetime.dateti
 
 
 def get_all_projects_as_json() -> str:
-    cur = db.conn.cursor()
+    cur = db.get_conn().cursor()
     cur.execute(f"SELECT nr, name_ FROM {Project.Table.name}")
     result = {int(row[0]): row[1] for row in cur.fetchall()}
     cur.close()
@@ -98,7 +98,7 @@ def get_all_projects_as_json() -> str:
 
 
 def calculate_worked_hours(empl_nr: int) -> float:
-    cur = db.conn.cursor()
+    cur = db.get_conn().cursor()
     command = f"SELECT SUM(TIMEDIFF(end_, start_)) FROM {entry.Entry.Table.name} " \
               f"where emplNr={empl_nr} AND end_ <= {util.date_to_sql(datetime.date.today() + datetime.timedelta(days=1))}"
     print(command)
@@ -156,7 +156,7 @@ def save_changes(empl_nr, GET) -> Optional[List[str]]:
 
 
 def collect_absences(empl_nr, sort=False):
-    cur = db.conn.cursor()
+    cur = db.get_conn().cursor()
     command = f"SELECT * FROM {absence.Absence.Table.name} WHERE emplNr={empl_nr}"
     print(command)
     cur.execute(command)
@@ -188,7 +188,7 @@ def add_absence(POST):
 
 
 def collect_employees():
-    cur = db.conn.cursor()
+    cur = db.get_conn().cursor()
     cur.execute(f"SELECT * FROM {employee.Employee.Table.name}")
     result = [employee.Employee.from_result(cur.column_names, row) for row in cur.fetchall()]
     cur.close()

@@ -81,7 +81,7 @@ class Employee(Entity):
 
     @staticmethod
     def find(empl_nr):
-        cur = model.db.conn.cursor()
+        cur = model.db.get_conn().cursor()
         cur.execute(f"SELECT * FROM {Employee.Table.name} WHERE emplNr={empl_nr}")
         return Employee.from_result(cur.column_names, cur.fetchone())
 
