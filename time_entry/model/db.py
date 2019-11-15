@@ -29,12 +29,12 @@ conn: Optional[MySQLConnection] = None
 
 
 class Const(object):
-    database_name = "time_entry"
+    database_name = "bb1950328$time_entry"
 
     connect_params = {
-        "user": "root",
-        "password": "root",
-        "host": "localhost",
+        "user": "bb1950328",
+        "password": "rootroot",
+        "host": "bb1950328.mysql.pythonanywhere-services.com",
         "port": 3306,
     }
 
