@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="projectM306" company="" webLink="http://www.github.com/bb1950328/projectM306" view-date="2019-10-25" view-index="0" gantt-divider-location="300" resource-divider-location="300" version="2.8.10" locale="de_CH">
+    <description/>
+    <view zooming-state="default:3" id="gantt-chart">
+        <field id="tpd3" name="Vorgang" width="188" order="0"/>
+        <field id="tpd4" name="Anfang" width="44" order="1"/>
+        <field id="tpd5" name="Ende" width="49" order="2"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Ressource" width="210" order="0"/>
+        <field id="1" name="Rolle" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars base-id="Nichts">
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="true"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="58" name="Prototyp (V1.0)" meeting="false" start="2019-11-01" duration="9" complete="0" expand="true">
+            <depend id="59" type="2" difference="0" hardness="Strong"/>
+            <task id="1" name="Projekt einrichten" color="#8cb6ce" meeting="false" start="2019-11-01" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                <depend id="2" type="2" difference="0" hardness="Strong"/>
+                <depend id="8" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="69" name="Datenmodell" meeting="false" start="2019-11-02" duration="3" complete="0" expand="true">
+                <depend id="65" type="2" difference="0" hardness="Strong"/>
+                <task id="2" name="Model Grundstruktur" color="#8cb6ce" meeting="false" start="2019-11-02" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="4" type="2" difference="0" hardness="Strong"/>
+                    <depend id="5" type="2" difference="0" hardness="Strong"/>
+                    <depend id="6" type="2" difference="0" hardness="Strong"/>
+                    <depend id="7" type="2" difference="0" hardness="Strong"/>
+                    <depend id="48" type="2" difference="0" hardness="Strong"/>
+                    <depend id="78" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="4" name="Entität Mitarbeiter" color="#8cb6ce" meeting="false" start="2019-11-03" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="7" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="5" name="Entität Projekt" color="#8cb6ce" meeting="false" start="2019-11-03" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="7" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="6" name="Entität Erfassung" color="#8cb6ce" meeting="false" start="2019-11-03" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="7" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="48" name="Entität Absenz" meeting="false" start="2019-11-03" duration="1" complete="0" expand="true">
+                    <depend id="7" type="2" difference="0" hardness="Strong"/>
+                    <depend id="16" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="7" name="Datenbank Anbindung" color="#8cb6ce" meeting="false" start="2019-11-04" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="11" type="2" difference="0" hardness="Strong"/>
+                    <depend id="56" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="78" name="Konfiguration" meeting="false" start="2019-11-03" duration="1" complete="0" expand="true">
+                    <depend id="95" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+            <task id="70" name="View" meeting="false" start="2019-11-02" duration="7" complete="0" expand="true">
+                <depend id="65" type="2" difference="0" hardness="Strong"/>
+                <depend id="67" type="2" difference="0" hardness="Strong"/>
+                <task id="8" name="View Grundstruktur" color="#8cb6ce" meeting="false" start="2019-11-02" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="9" type="2" difference="0" hardness="Strong"/>
+                    <depend id="14" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="14" name="Login und Benutzer" color="#8cb6ce" meeting="false" start="2019-11-03" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="11" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="9" name="Basis-View (Header usw.)" meeting="false" start="2019-11-03" duration="1" complete="0" expand="true">
+                    <depend id="11" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="11" name="View Startseite" color="#8cb6ce" meeting="false" start="2019-11-05" duration="1" complete="0" thirdDate="2019-11-15" thirdDate-constraint="0" expand="true">
+                    <depend id="10" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="10" name="Static-Files einrichten" meeting="false" start="2019-11-06" duration="1" complete="0" expand="true">
+                    <depend id="13" type="2" difference="0" hardness="Strong"/>
+                    <depend id="15" type="2" difference="0" hardness="Strong"/>
+                    <depend id="16" type="2" difference="0" hardness="Strong"/>
+                    <depend id="17" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="13" name="View Mitarbeiter Detail" meeting="false" start="2019-11-07" duration="1" complete="0" expand="true">
+                    <depend id="52" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="15" name="View Mitarbeiter Liste" meeting="false" start="2019-11-07" duration="1" complete="0" expand="true"/>
+                <task id="54" name="View Projektübersicht" meeting="false" start="2019-11-08" duration="1" complete="0" expand="true"/>
+                <task id="95" name="Konfigurationsseite" meeting="false" start="2019-11-04" duration="1" complete="0" expand="true"/>
+            </task>
+            <task id="16" name="Formular Absenz erstellen" meeting="false" start="2019-11-07" duration="1" complete="0" expand="true">
+                <depend id="50" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="17" name="Formular Projekt erstellen" meeting="false" start="2019-11-07" duration="1" complete="0" expand="true">
+                <depend id="54" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="50" name="Absenz Modell / View um Typ (Militär / Ferien / Krank) erweitern" meeting="false" start="2019-11-08" duration="1" complete="0" expand="true"/>
+            <task id="52" name="Teilzeit / Vollzeit in Model und View implementieren" meeting="false" start="2019-11-08" duration="1" complete="0" expand="true"/>
+            <task id="56" name="Visualisierungen" meeting="false" start="2019-11-05" duration="1" complete="0" expand="true"/>
+            <task id="65" name="regulatorische Restriktionen" color="#8cb6ce" meeting="false" start="2019-11-09" duration="1" complete="0" thirdDate="2019-10-31" thirdDate-constraint="0" expand="true"/>
+            <task id="67" name="Darstellung optimieren" color="#8cb6ce" meeting="false" start="2019-11-09" duration="1" complete="0" thirdDate="2019-10-31" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="59" name="Prototyp testen" meeting="false" start="2019-11-10" duration="1" complete="0" expand="true">
+            <depend id="60" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="60" name="Verbesserungen Prototyp" meeting="false" start="2019-11-11" duration="1" complete="0" expand="true"/>
+        <task id="63" name="Organisation" meeting="false" start="2019-10-31" duration="1" complete="0" expand="true">
+            <task id="64" name="Pflichtenheft V1.0" meeting="false" start="2019-10-31" duration="1" complete="0" expand="true"/>
+        </task>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+    <roles>
+        <role id="1" name=""/>
+    </roles>
+</project>
