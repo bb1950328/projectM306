@@ -32,10 +32,20 @@ logging.getLogger().setLevel(logging.DEBUG)
 conn: Optional[MySQLConnection] = None
 
 
+def load_connect_params():
+    settings_file_name = "database_settings.json"
+    path = os.path.join(config.get_base_path(), "..", settings_file_name)
+    if not os.path.isfile(path):
+        raise ValueError(f"Database config file not found. "
+                         f"Please copy \"{settings_file_name}.default\" to \"{path}\"")
+    with open(path) as f:
+        return json.load(f)
+
+
 class Const(object):
     database_name = "time_entry"
 
-    connect_params = json.load(open(os.path.join(config.get_base_path(), "..", "database_settings.json")))
+    connect_params = load_connect_params()
 
     all_entities = [setting.Setting,
                     employee.Employee,

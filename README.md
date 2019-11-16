@@ -27,6 +27,9 @@ Zur Vorbereitung mysql Server installieren. Als Passwort für root zur Einfachhe
    
    `python manage.py runserver 8000`
    
+## Datenbank-Konfiguration anpassen
+
+Die Datei `database_settings.json.default` nach `database_settings.json` kopieren. Eventuell Verbindungsparameter in der Datei anpassen.
 
 ## Ausprobieren
 
