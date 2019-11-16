@@ -29,7 +29,7 @@ import time_entry.model.entity.project as project
 from time_entry.model.entity import setting, absence
 
 logging.getLogger().setLevel(logging.DEBUG)
-conn: Optional[MySQLConnection] = None
+_conn: Optional[MySQLConnection] = None
 
 
 def load_connect_params():
@@ -43,7 +43,7 @@ def load_connect_params():
 
 
 class Const(object):
-    database_name = "time_entry"
+    database_name = "bb1950328$time_entry"
 
     connect_params = load_connect_params()
 
@@ -55,19 +55,22 @@ class Const(object):
                     ]
 
 
-def connect_to_database():
-    try:
-        global conn
-        conn = connector.connect(database=Const.database_name,
-                                 **Const.connect_params,
-                                 )
-    except ProgrammingError:
-        conn = None
+def get_conn():
+    global _conn
+    if _conn is None or not _conn.is_connected():
+        try:
+            _conn = connector.connect(database=Const.database_name,
+                                      **Const.connect_params,
+                                      )
+            _conn.ping(True)
+        except ProgrammingError:
+            _conn = None
+    return _conn
 
 
 def drop_database(cursor=None):
     if cursor is None:
-        cursor = conn.cursor()
+        cursor = get_conn().cursor()
     cursor.execute(f"DROP DATABASE {Const.database_name}")
     User.objects.all().delete()
 
@@ -104,14 +107,14 @@ def setup_database(ignore_existing=True):
 
     local_conn.commit()
     cur.close()
-    connect_to_database()
+    # connect_to_database()
 
 
 def insert_test_data():
     from time_entry.test import data
     data.generate()
     for ent in data.employees + data.projects + data.entries:
-        ent.insert(conn)
+        ent.insert(get_conn())
 
 
 if name_is_main():
@@ -121,4 +124,4 @@ if name_is_main():
     for command in sys.argv[1:]:
         globals()[command]()
 else:
-    connect_to_database()
+    pass  # connect_to_database()

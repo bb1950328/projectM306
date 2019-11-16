@@ -21,7 +21,7 @@ class Project(Entity):
 
     @staticmethod
     def find(nr):
-        cur = db.conn.cursor()
+        cur = db.get_conn().cursor()
         cur.execute(f"SELECT * FROM {Project.Table.name} WHERE nr={nr}")
         return Project.from_result(cur.column_names, cur.fetchone())
 

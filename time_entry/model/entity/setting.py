@@ -18,7 +18,7 @@ class Setting(Entity):
 
     @staticmethod
     def find(key):
-        cur = model.db.conn.cursor()
+        cur = model.db.get_conn().cursor()
         cur.execute(f"SELECT * FROM {Setting.Table.name} WHERE key_='{key}'")
         return Setting.from_result(cur.column_names, cur.fetchone())
 
