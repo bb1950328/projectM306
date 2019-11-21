@@ -40,7 +40,7 @@ class Entity(abc.ABC):
     def insert(self, connection=None):
         self.validate()
         if connection is None:
-            connection = db.conn
+            connection = db.get_conn()
         cur = connection.cursor()
         command = self.get_insert_command()
         print(command)

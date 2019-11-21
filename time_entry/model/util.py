@@ -16,6 +16,10 @@ def date_to_sql(value: Optional[datetime.date]) -> str:
     return value.strftime("'%Y-%m-%d'") if value else "NULL"
 
 
+def path_to_sql(path: str) -> str:
+    return path.replace("\\", "\\\\")
+
+
 def is_work_day(day: Union[datetime.date, datetime.datetime]) -> bool:
     return day.isoweekday() <= 5  # 5 = friday
 
@@ -30,3 +34,12 @@ def locale_format(dt: Union[datetime.date, datetime.datetime, datetime.time]) ->
     else:
         fmt = time_fmt
     return dt.strftime(fmt)
+
+
+def strmaxlen(inp: str, maxlen, dots=True):
+    if len(inp) <= maxlen:
+        return str
+    if dots:
+        maxlen -= 3
+    new = inp[:maxlen]
+    return new + "..." if dots else new

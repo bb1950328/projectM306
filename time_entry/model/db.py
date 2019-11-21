@@ -2,8 +2,6 @@
 import json
 import os
 
-from time_entry.model import config
-
 
 def name_is_main():
     return __name__ == "__main__"
@@ -23,6 +21,7 @@ from django.contrib.auth.models import User
 from mysql import connector
 from mysql.connector import DatabaseError, MySQLConnection, ProgrammingError
 
+from time_entry.model import config
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
 import time_entry.model.entity.project as project
@@ -35,6 +34,7 @@ _conn: Optional[MySQLConnection] = None
 def load_connect_params():
     settings_file_name = "database_settings.json"
     path = os.path.join(config.get_base_path(), "..", settings_file_name)
+    path = os.path.abspath(path)
     if not os.path.isfile(path):
         raise ValueError(f"Database config file not found. "
                          f"Please copy \"{settings_file_name}.default\" to \"{path}\"")
@@ -43,9 +43,10 @@ def load_connect_params():
 
 
 class Const(object):
-    database_name = "bb1950328$time_entry"
-
     connect_params = load_connect_params()
+
+    database_name = connect_params["db_name"]
+    del connect_params["db_name"]
 
     all_entities = [setting.Setting,
                     employee.Employee,
@@ -57,7 +58,7 @@ class Const(object):
 
 def get_conn():
     global _conn
-    if _conn is None or not _conn.is_connected():
+    if _conn is None or not _conn.is_connected() or _conn.database is None:
         try:
             _conn = connector.connect(database=Const.database_name,
                                       **Const.connect_params,
@@ -107,7 +108,6 @@ def setup_database(ignore_existing=True):
 
     local_conn.commit()
     cur.close()
-    # connect_to_database()
 
 
 def insert_test_data():

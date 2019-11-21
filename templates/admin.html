@@ -1,5 +1,5 @@
 {% extends 'base_page.html' %}
-{% block title %}Logout{% endblock %}
+{% block title %}Admin{% endblock %}
 {% block content %}
     <h1>Admin</h1>
     <h2>Git</h2>
@@ -9,6 +9,7 @@
             <td>Datum</td>
             <td>Autor</td>
             <td>Hash</td>
+            <td>Kommentar</td>
         </tr>
         </thead>
         <tbody>
@@ -17,19 +18,57 @@
                 <td>{{ entry.date }}</td>
                 <td>{{ entry.author }}</td>
                 <td>{{ entry.hash }}</td>
+                <td>{{ entry.message }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <button onclick="run_git_pull()">'git pull' ausführen</button>
+    <br>
     <span id="message_span"></span>
+    <h2>Import</h2>
+    <select name="import_folder" id="input_import_folder">
+        {% for folder in import_options %}
+            <option>{{ folder }}</option>
+        {% endfor %}
+    </select>
+    <button type="button" onclick="run_import()">Importieren</button>
+    <h2>Export</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="input_export_folder">Name: </label>
+        <input type="text" name="export_folder" id="input_export_folder">
+        <button type="button" onclick="run_export()">Exportieren</button>
+    </form>
     <script>
+        function run_import() {
+            let option = document.getElementById("input_import_folder").selectedOptions[0].innerText;
+            let req = new XMLHttpRequest();
+            req.open("GET", "/admin/import?folder=" + option, false);
+            req.send();
+            alert(req.response)
+        }
+
+        function run_export() {
+            let folder = document.getElementById("input_export_folder").value;
+            let req = new XMLHttpRequest();
+            req.open("GET", "/admin/export?folder=" + folder, false);
+            req.send();
+            alert(req.response)
+        }
+
         function run_git_pull() {
             let req = new XMLHttpRequest();
-            req.open("GET", "/git_pull", false);
+            req.open("GET", "/admin/git_pull", false);
             req.send();
             let msg_span = document.getElementById("message_span");
             msg_span.innerText = req.response;
+            let index_of = msg_span.innerText.indexOf("nicht erfolgreich");
+            if (index_of > 0) {
+                msg_span.style.color = "red";
+            } else {
+                msg_span.style.color = "green";
+            }
         }
     </script>
 {% endblock %}

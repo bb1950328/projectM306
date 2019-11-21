@@ -33,5 +33,7 @@ urlpatterns = [
     *gen("new_absence", employee_view.new_absence),
     *gen("no_permission", index.no_permission),
     *gen("admin", admin.admin),
-    *gen("git_pull", admin.git_pull),
+    *gen("admin/git_pull", admin.git_pull),
+    *gen("admin/import", admin.import_),
+    *gen("admin/export", admin.export),
 ]
