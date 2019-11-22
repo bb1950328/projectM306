@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="projectM306" company="" webLink="http://www.github.com/bb1950328/projectM306" view-date="2019-11-01" view-index="0" gantt-divider-location="327" resource-divider-location="300" version="2.8.10" locale="de_CH">
+<?xml version="1.0" encoding="UTF-8"?><project name="projectM306" company="" webLink="http://www.github.com/bb1950328/projectM306" view-date="2019-11-25" view-index="0" gantt-divider-location="393" resource-divider-location="300" version="2.8.10" locale="de_CH">
     <description/>
-    <view zooming-state="default:9" id="gantt-chart">
-        <field id="tpd3" name="Vorgang" width="235" order="0"/>
-        <field id="tpd4" name="Anfang" width="40" order="1"/>
-        <field id="tpd5" name="Ende" width="33" order="2"/>
+    <view zooming-state="default:5" id="gantt-chart">
+        <field id="tpd3" name="Vorgang" width="262" order="0"/>
+        <field id="tpd4" name="Anfang" width="67" order="1"/>
+        <field id="tpd5" name="Ende" width="60" order="2"/>
         <option id="color.recent"><![CDATA[#000000 #ff3333 #9999ff #ff9933 #66ff66]]></option>
     </view>
     <view id="resource-table">
