@@ -43,3 +43,9 @@ def strmaxlen(inp: str, maxlen, dots=True):
         maxlen -= 3
     new = inp[:maxlen]
     return new + "..." if dots else new
+
+def is_on_windows():
+    return os.name == 'nt'
+
+def is_on_linux():
+    return os.name == 'posix'
