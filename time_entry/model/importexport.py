@@ -1,41 +1,47 @@
 # coding=utf-8
 import datetime
 import os
-import shutil
-import tempfile
 from typing import List
 
 from django.contrib.auth.models import User
 from django.core import serializers
 
-from time_entry.model import db, config, util
+from time_entry.model import db, config
 
 DELIMITER = ";"
 
 
+def cell_to_sql(cell: str) -> str:
+    if cell == "\\N":
+        return "NULL"
+    else:
+        if cell.startswith('"'):
+            return f"'{cell[1:-1]}'"
+
+
 def import_file(path: str) -> None:
+    values = []
     with open(path, encoding="UTF-8") as f:
         columns = map(str.strip, f.readline().split(DELIMITER))
-    tmp_folder = " /etc/mysql/"  #tempfile.gettempdir()
+        for line in f.readlines():
+            row = line.strip().split(DELIMITER)
+            new_row = [cell_to_sql(cell) for cell in row]
+            values.append(", ".join(new_row))
+
     file_name = os.path.basename(path)
-    tmp_path = os.path.join(tmp_folder, file_name)
-    shutil.copyfile(path, tmp_path)
     table_name = file_name.split(".")[0]
-    query = f"LOAD DATA INFILE '{util.path_to_sql(tmp_path)}' " \
-            f"INTO TABLE {table_name} " \
-            f"FIELDS TERMINATED BY '{DELIMITER}' ENCLOSED BY '\"' " \
-            f"LINES TERMINATED BY '\\r\\n' " \
-            f"IGNORE 1 ROWS " \
-            f"({', '.join(columns)})"
+
+    query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({'), ('.join(values)})"
+
     print(query)
     conn = db.get_conn()
     cur = conn.cursor()
+
     cur.execute("SET FOREIGN_KEY_CHECKS=0;")
     cur.execute(query)
     cur.execute("SET FOREIGN_KEY_CHECKS=1;")
     conn.commit()
     cur.close()
-    os.remove(tmp_path)
 
 
 def to_str(obj: object) -> str:
@@ -70,7 +76,6 @@ def export_all_tables(folder: str):
 
 
 def import_all_files(folder: str):
-    # todo import/export usernames and passwords too
     db.drop_database()
     db.setup_database()
     folder = os.path.join(config.get_example_data_folder(), folder)
@@ -113,4 +118,3 @@ def set_folder_permissions(folder: str, perm_code=0o777):
             os.chmod(os.path.join(root, d), perm_code)
         for f in files:
             os.chmod(os.path.join(root, f), perm_code)
-    #if util.is_on_windows():
