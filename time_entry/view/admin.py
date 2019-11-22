@@ -6,10 +6,12 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from time_entry.model import admin as model_admin, importexport
+from time_entry.view import base_view
 
 
 def admin(request: WSGIRequest):
     con = {
+        **base_view.get_user_context(request),
         "git_log": model_admin.get_git_log(),
         "import_options": importexport.get_all_exported_folders(),
     }

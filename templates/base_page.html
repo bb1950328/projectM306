@@ -8,6 +8,8 @@
 </head>
 <body>
 <a href="index.html">Home</a>
+<a href="employee.html">Mitarbeiter</a>
+
 {% if user_authenticated %}
     Angemeldet als <a href="./employee.html?empl_nr={{ user.emplNr }}">{{ user.firstName }} {{ user.lastName }}</a>
     <a href="logout.html">Abmelden</a>

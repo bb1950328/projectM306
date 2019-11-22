@@ -1,5 +1,6 @@
 # coding=utf-8
 import datetime
+from typing import Set
 
 import time_entry.model as model
 from time_entry.model.entity.entity import Entity
@@ -11,12 +12,25 @@ class Role(object):
         self.name = name
         self.description = description
 
+    @staticmethod
+    def of_name(name: str):
+        for r in Role.ALL:
+            if r.name == name:
+                return r
+
 
 Role.ADMIN = Role("admin", "Administrator")
 Role.HR = Role("hr", "Human Resources Manager")
 Role.CEO = Role("ceo", "Geschäftsleiter")
 Role.BOSS = Role("boss", "Chef")
 Role.EMPLOYEE = Role("employee", "Mitarbeiter")
+Role.ALL = [  # todo prettier solution
+    Role.ADMIN,
+    Role.HR,
+    Role.CEO,
+    Role.BOSS,
+    Role.EMPLOYEE,
+]
 
 
 class Permission(object):
@@ -26,31 +40,28 @@ class Permission(object):
         self.description = description
 
     @staticmethod
-    def _in_employee(roles, employee) -> bool:
-        for r in roles:
-            if r in employee.roles:
-                return True
-        return False
+    def _in_employee(roles: Set[Role], employee) -> bool:
+        return len(roles & employee.roles) > 0
 
     @staticmethod
     def can_view_employee_list(employee):
-        roles = (Role.ADMIN, Role.HR, Role.CEO, Role.BOSS)
-        return Permission._in_employee(roles, employee)
+        required = {Role.ADMIN, Role.HR, Role.CEO, Role.BOSS}
+        return Permission._in_employee(required, employee)
 
     @staticmethod
     def can_view_employee_details(employee):
-        roles = (Role.ADMIN, Role.HR, Role.CEO, Role.BOSS)
-        return Permission._in_employee(roles, employee)
+        required = {Role.ADMIN, Role.HR, Role.CEO, Role.BOSS}
+        return Permission._in_employee(required, employee)
 
     @staticmethod
     def can_edit_employee_details(employee):
-        roles = (Role.ADMIN, Role.HR, Role.CEO)
-        return Permission._in_employee(roles, employee)
+        required = {Role.ADMIN, Role.HR, Role.CEO}
+        return Permission._in_employee(required, employee)
 
     @staticmethod
     def can_add_absence(employee):
-        roles = (Role.ADMIN, Role.HR, Role.CEO)
-        return Permission._in_employee(roles, employee)
+        required = {Role.ADMIN, Role.HR, Role.CEO}
+        return Permission._in_employee(required, employee)
 
 
 class Employee(Entity):
@@ -76,7 +87,7 @@ class Employee(Entity):
         empl.lastName = get("lastName")
         empl.since = get("since")
         empl.until = get("until")
-        empl.roles = set(get("roles").split("+"))
+        empl.roles = set(map(Role.of_name, get("roles").split("+")))
         return empl
 
     @staticmethod
@@ -86,13 +97,13 @@ class Employee(Entity):
         return Employee.from_result(cur.column_names, cur.fetchone())
 
     def get_insert_command(self):
-        roles = "+".join(self.roles)
+        roles = "+".join([r.name for r in self.roles])
         return f"INSERT INTO {self.Table.name} (emplNr, firstName, lastName, since, until, roles) VALUES " \
                f"({self.emplNr}, '{self.firstName}', '{self.lastName}', " \
                f"{model.util.date_to_sql(self.since)}, {model.util.date_to_sql(self.until)}, '{roles}')"
 
     def get_save_command(self):
-        roles = "+".join(self.roles)
+        roles = "+".join([r.name for r in self.roles])
         return f"UPDATE {self.Table.name} SET firstName='{self.firstName}', lastName='{self.lastName}', " \
                f"since={model.util.date_to_sql(self.since)}, until={model.util.date_to_sql(self.until)}, " \
                f"roles='{roles}' WHERE emplNr={self.emplNr}"
@@ -102,7 +113,7 @@ class Employee(Entity):
     _last_name: str
     _since: datetime.date
     _until: datetime.date
-    _roles: set
+    _roles: Set[Role]
 
     class Table(object):
         name = "employee"
@@ -156,7 +167,7 @@ class Employee(Entity):
     def _set_until(self, until: datetime.date) -> None:
         self._until = until
 
-    def _set_roles(self, roles: set) -> None:
+    def _set_roles(self, roles: Set[Role]) -> None:
         self._roles = roles
 
     def _get_roles(self) -> set:
