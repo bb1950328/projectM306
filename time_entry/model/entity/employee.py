@@ -18,6 +18,12 @@ class Role(object):
             if r.name == name:
                 return r
 
+    def __str__(self) -> str:
+        return f"Role[{self.name}]"
+
+    def __repr__(self) -> str:
+        return f'Role("{self.name}", "{self.description}")'
+
 
 Role.ADMIN = Role("admin", "Administrator")
 Role.HR = Role("hr", "Human Resources Manager")
@@ -87,7 +93,11 @@ class Employee(Entity):
         empl.lastName = get("lastName")
         empl.since = get("since")
         empl.until = get("until")
-        empl.roles = set(map(Role.of_name, get("roles").split("+")))
+        splitted = get("roles").split("+")
+        if splitted[0]:
+            empl.roles = {Role.of_name(x) for x in splitted}
+        else:
+            empl.roles = set()
         return empl
 
     @staticmethod

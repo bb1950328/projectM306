@@ -21,7 +21,10 @@ def table_view(request: WSGIRequest):
         employees = model.collect_employees()
         for empl in employees:
             empl.floatTime = round(model.calculate_float_time(empl.emplNr), 2)
-            empl.roles_joined = ", ".join(empl.roles)
+            if empl.roles:
+                empl.roles_joined = ", ".join([r.description for r in empl.roles])
+            else:
+                empl.roles_joined = "-"
         context.update({
             **base_view.get_user_context(request),
             "employees": employees,
