@@ -3,6 +3,7 @@ import datetime
 from typing import Set
 
 import time_entry.model as model
+from time_entry.model import db
 from time_entry.model.entity.entity import Entity
 
 
@@ -102,7 +103,7 @@ class Employee(Entity):
 
     @staticmethod
     def find(empl_nr):
-        cur = model.db.get_conn().cursor()
+        cur = db.get_conn().cursor()
         cur.execute(f"SELECT * FROM {Employee.Table.name} WHERE emplNr={empl_nr}")
         return Employee.from_result(cur.column_names, cur.fetchone())
 
