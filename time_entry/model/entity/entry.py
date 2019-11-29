@@ -6,6 +6,7 @@ import time_entry.model.entity.employee as employee
 from time_entry.model import validate, util, db, model, config
 from time_entry.model.entity.entity import Entity
 from time_entry.model.entity.project import Project
+from time_entry.model.entity.setting import Setting
 
 
 class Entry(Entity):
@@ -72,7 +73,7 @@ class Entry(Entity):
             if self.collides_with(en):
                 raise ValueError(f"{self} kollidiert mit {en}")
         sum_work_hours = sum_work.total_seconds() / 3600
-        max_work_per_day = float(config.get(config.Names.MAX_WORK_PER_DAY))
+        max_work_per_day = Setting.find_float_value(Setting.MAX_WORK_PER_DAY)
         if sum_work_hours > max_work_per_day:
             raise ValueError(f"Sie dürfen am {self.start.strftime('%d.%m.%Y')} "
                              f"höchstens {max_work_per_day}h arbeiten!")

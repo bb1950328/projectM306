@@ -12,6 +12,7 @@ import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
 from time_entry.model import db, util, config
 from time_entry.model.entity.project import Project
+from time_entry.model.entity.setting import Setting
 
 
 def new_employee(empl_nr, first_name, last_name):
@@ -129,7 +130,8 @@ def calculate_float_time(empl_nr: int) -> decimal.Decimal:
         end = today
     present_days = count_work_days(empl.since, end)
     present_days -= count_absent_days(empl_nr)
-    should_worked = present_days * decimal.Decimal(config.get(config.Names.SOLL_WORK_PER_DAY))
+    soll_work = Setting.find(Setting.SOLL_WORK_PER_DAY)
+    should_worked = present_days * decimal.Decimal(soll_work)
     return worked_hours - should_worked
 
 

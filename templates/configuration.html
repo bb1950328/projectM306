@@ -1,0 +1,50 @@
+{% extends 'base_page.html' %}
+{% block title %}Konfiguration{% endblock %}
+{% block content %}
+    <h1>Konfiguration</h1>
+    <table>
+        <thead>
+        <tr>
+            <td>Einstellung</td>
+            <td>Wert</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for se in all_settings %}
+            <tr>
+                <td>{{ se.displayName }}</td>
+                <td><input id="{{ se.id }}" type="{{ se.type }}" value="{{ se.value }}"
+                           onchange="changed('{{ se.id }}')" step="any"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button id="save_button" type="button" onclick="save()" disabled>Speichern</button>
+    <script>
+        let changed_ids = [];
+
+        function changed(input_id) {
+            if (!changed_ids.includes(input_id)) {
+                changed_ids.push(input_id);
+            }
+            document.getElementById("save_button").disabled = false;
+        }
+
+        function save() {
+            let queries = [];
+            changed_ids.forEach((id, index) => {
+                let q = id;
+                q += "=\"";
+                let input = document.getElementById(id);
+                q += input.value;
+                q += "\"";
+                queries.push(q);
+            });
+            let url = window.location.href;
+            url = url.replace("configuration", "configuration/save");
+            url += "?";
+            url += queries.join("&");
+            window.location.replace(url);
+        }
+    </script>
+{% endblock %}

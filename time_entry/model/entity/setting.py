@@ -5,6 +5,8 @@ from time_entry.model.entity.entity import Entity
 
 
 class Setting(Entity):
+    MAX_WORK_PER_DAY = "MAX_WORK_PER_DAY"
+    SOLL_WORK_PER_DAY = "SOLL_WORK_PER_DAY"
 
     @staticmethod
     def from_result(column_names, fetched):
@@ -19,8 +21,25 @@ class Setting(Entity):
     @staticmethod
     def find(key):
         cur = model.db.get_conn().cursor()
-        cur.execute(f"SELECT * FROM {Setting.Table.name} WHERE key_='{key}'")
+        query = f"SELECT * FROM {Setting.Table.name} WHERE key_='{key}'"
+        cur.execute(query)
         return Setting.from_result(cur.column_names, cur.fetchone())
+
+    @staticmethod
+    def find_int_value(key) -> int:
+        return Setting._find_and_convert(key, int)
+
+    @staticmethod
+    def find_float_value(key) -> float:
+        return Setting._find_and_convert(key, float)
+
+    @staticmethod
+    def _find_and_convert(key, func):
+        res_str = Setting.find(key).value
+        try:
+            return func(res_str)
+        except ValueError:
+            raise ValueError(f"Value \"{res_str}\" cannot be converted to an {func.__name__}!")
 
     def get_insert_command(self):
         return f"INSERT INTO {self.Table.name} (key_, value) VALUES " \
