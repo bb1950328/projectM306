@@ -46,8 +46,8 @@ class Setting(Entity):
                f"('{self.key}', '{self.value}')"
 
     def get_save_command(self):
-        return f"UPDATE {self.Table.name} SET value_='{self.value}' " \
-               f"WHERE key='{self.key}'"
+        return f"UPDATE {self.Table.name} SET value='{self.value}' " \
+               f"WHERE key_='{self.key}'"
 
     _key: str
     _value: str

@@ -33,7 +33,9 @@ class Entity(abc.ABC):
     def save(self):
         self.validate()
         cur = db.get_conn().cursor()
-        cur.execute(self.get_save_command())
+        query = self.get_save_command()
+        print(query)
+        cur.execute(query)
         db.get_conn().commit()
         cur.close()
 
