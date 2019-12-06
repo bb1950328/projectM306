@@ -70,6 +70,11 @@ class Permission(object):
         required = {Role.ADMIN, Role.HR, Role.CEO}
         return Permission._in_employee(required, employee)
 
+    @staticmethod
+    def can_be_admin(employee):
+        required = {Role.ADMIN}
+        return Permission._in_employee(required, employee)
+
 
 class Employee(Entity):
 

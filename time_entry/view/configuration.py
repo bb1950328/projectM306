@@ -2,6 +2,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 
 from time_entry.model.entity.setting import Setting
+from time_entry.view import base_view
 
 
 def view(request: WSGIRequest):
@@ -19,7 +20,10 @@ def view(request: WSGIRequest):
             "type": "number",
         }
     ]
-    context = {"all_settings": se}
+    context = {
+        **base_view.get_user_context(request),
+        "all_settings": se,
+    }
     return render(request, "configuration.html", context=context)
 
 

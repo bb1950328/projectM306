@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{% static "css/style.css" %}">
 </head>
 <body>
+{% for el in nav_elements %}
+    <div class="nav_element"><a href="{{ el.link }}">{{ el.text }}</a></div>
+{% endfor %}
 <a href="index.html">Home</a>
 <a href="employee.html">Mitarbeiter</a>
 
