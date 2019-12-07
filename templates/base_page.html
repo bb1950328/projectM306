@@ -10,8 +10,6 @@
 {% for el in nav_elements %}
     <div class="nav_element"><a href="{{ el.link }}">{{ el.text }}</a></div>
 {% endfor %}
-<a href="index.html">Home</a>
-<a href="employee.html">Mitarbeiter</a>
 
 {% if user_authenticated %}
     Angemeldet als <a href="./employee.html?empl_nr={{ user.emplNr }}">{{ user.firstName }} {{ user.lastName }}</a>

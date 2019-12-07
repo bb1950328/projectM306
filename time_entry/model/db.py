@@ -89,8 +89,8 @@ def setup_database(ignore_existing=True):
     nl_and_indent = re.compile(b"\\n\\s*")
     encoded = commands.encode(local_conn.python_charset)
     for statement in RE_SQL_SPLIT_STMTS.split(encoded):
-        formatted = b"".join(nl_and_indent.split(statement))
-        if formatted:
+        formatted = b" ".join(nl_and_indent.split(statement))
+        if formatted.strip():
             print(formatted)
             cur.execute(statement)
 

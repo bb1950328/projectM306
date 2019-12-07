@@ -41,3 +41,7 @@
     height: 100vh;
     background-color: #000000aa;
 }
+
+.nav_element {
+    display: inline;
+}
