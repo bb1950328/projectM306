@@ -1,0 +1,28 @@
+{% extends 'base_page.html' %}
+{% block title %}Projekte{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+        <tr>
+            <td>
+                <a href="project.html?sort=nr_{{ updown_nr }}"> Nr. {{ updown_arrow_nr }}</a>
+            </td>
+            <td>
+                <a href="project.html?sort=name_{{ updown_name }}"> Name {{ updown_arrow_name }}</a>
+            </td>
+            <td>
+                <a href="project.html?sort=hours_{{ updown_hours }}"> Stunden {{ updown_arrow_hours }}</a>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pro in projects %}
+            <tr>
+                <td><a href="project.html?project_nr={{ pro.nr }}">{{ pro.nr }}</a></td>
+                <td>{{ pro.name }}</td>
+                <td>{{ pro.hours }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

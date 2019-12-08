@@ -1,0 +1,28 @@
+{% extends 'base_page.html' %}
+{% block title %}Projekt {{ nr }}{% endblock %}
+{% block content %}
+    <table>
+        <tr>
+            <td>Nummer:</td>
+            <td>{{ nr }}</td>
+        </tr>
+        <tr>
+            <td>Name:</td>
+            <td>{{ name }}</td>
+        </tr>
+        <tr>
+            <td>Total Stunden:</td>
+            <td>{{ hours }}</td>
+        </tr>
+        <tr>
+            <td>Mitarbeiter:</td>
+            <td>
+                <ul>
+                    {% for con in contributors %}
+                        <li>{{ con }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

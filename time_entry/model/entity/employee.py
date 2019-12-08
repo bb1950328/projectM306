@@ -75,6 +75,16 @@ class Permission(object):
         required = {Role.ADMIN}
         return Permission._in_employee(required, employee)
 
+    @staticmethod
+    def can_view_project_list(employee):
+        required = {Role.ADMIN, Role.HR, Role.CEO, Role.BOSS}
+        return Permission._in_employee(required, employee)
+
+    @staticmethod
+    def can_view_project_details(employee):
+        required = {Role.ADMIN, Role.HR, Role.CEO, Role.BOSS}
+        return Permission._in_employee(required, employee)
+
 
 class Employee(Entity):
 

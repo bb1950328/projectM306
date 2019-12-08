@@ -74,7 +74,7 @@ def detail_view(empl_nr, request):
     empl = employee.Employee.find(empl_nr)
     user_empl = employee.Employee.find(request.user.get_username())
     context = base_view.get_user_context(request)
-    if employee.Permission.can_view_employee_details(empl) or empl.emplNr == user_empl.emplNr:
+    if employee.Permission.can_view_employee_details(user_empl) or empl.emplNr == user_empl.emplNr:
         absences_list = model.collect_absences(empl_nr, sort=True)
         absences = []
         for ab in absences_list:

@@ -5,7 +5,6 @@ from time_entry.model.entity import employee
 
 
 def get_user_context(request: WSGIRequest) -> dict:
-    # TODO show only links which the user can access
     if request.user.is_authenticated:
         empl = employee.Employee.find(request.user.get_username())
         context = {"user": empl,
@@ -21,8 +20,8 @@ def get_user_context(request: WSGIRequest) -> dict:
             nav_elements.append(get_dict("Mitarbeiter", "employee.html"))
         if employee.Permission.can_be_admin(empl):
             nav_elements.append(get_dict("Admin", "admin.html"))
-        # if employee.Permission.can_view_project_list(empl):
-        #    nav_elements.append(get_dict("Admin", "admin.html"))
+        if employee.Permission.can_view_project_list(empl):
+            nav_elements.append(get_dict("Projekte", "project.html"))
         context["nav_elements"] = nav_elements
     else:
         context = {"user_authenticated": False}

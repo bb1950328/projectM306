@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 import time_entry.model.entity.absence as absence
 import time_entry.model.entity.employee as employee
 import time_entry.model.entity.entry as entry
-from time_entry.model import db, util, config
+from time_entry.model import db, util
 from time_entry.model.entity.project import Project
 from time_entry.model.entity.setting import Setting
 
@@ -101,7 +101,8 @@ def get_all_projects_as_json() -> str:
 def calculate_worked_hours(empl_nr: int) -> float:
     cur = db.get_conn().cursor()
     command = f"SELECT SUM(TIMEDIFF(end_, start_)) FROM {entry.Entry.Table.name} " \
-              f"where emplNr={empl_nr} AND end_ <= {util.date_to_sql(datetime.date.today() + datetime.timedelta(days=1))}"
+              f"WHERE emplNr={empl_nr} " \
+              f"AND end_ <= {util.date_to_sql(datetime.date.today() + datetime.timedelta(days=1))}"
     print(command)
     cur.execute(command)
     res = cur.fetchone()[0]
@@ -195,3 +196,33 @@ def collect_employees():
     result = [employee.Employee.from_result(cur.column_names, row) for row in cur.fetchall()]
     cur.close()
     return result
+
+
+def collect_projects():
+    cur = db.get_conn().cursor()
+    cur.execute(f"SELECT * FROM {Project.Table.name}")
+    result = [Project.from_result(cur.column_names, row) for row in cur.fetchall()]
+    cur.close()
+    return result
+
+
+def get_contributors_for_project(project_nr):
+    cur = db.get_conn().cursor()
+    command = f"SELECT DISTINCT emplNr FROM {entry.Entry.Table.name} " \
+              f"WHERE projectNr={project_nr}"
+    cur.execute(command)
+    result = cur.fetchall()
+    cur.close()
+    return [employee.Employee.find(int(row[0])) for row in result]
+
+
+def calculate_hours_for_project(project_nr):
+    cur = db.get_conn().cursor()
+    command = f"SELECT SUM(TIMEDIFF(end_, start_)) FROM {entry.Entry.Table.name} " \
+              f"WHERE projectNr={project_nr}"
+    cur.execute(command)
+    res = cur.fetchone()[0]
+    cur.close()
+    if res is None:
+        res = decimal.Decimal("0")
+    return res / 10_000  # TIMEDIFF() returns 10'000 per hour
