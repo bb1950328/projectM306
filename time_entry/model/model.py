@@ -131,7 +131,7 @@ def calculate_float_time(empl_nr: int) -> decimal.Decimal:
         end = today
     present_days = count_work_days(empl.since, end)
     present_days -= count_absent_days(empl_nr)
-    soll_work = Setting.find(Setting.SOLL_WORK_PER_DAY)
+    soll_work: str = Setting.find(Setting.SOLL_WORK_PER_DAY).value
     should_worked = present_days * decimal.Decimal(soll_work)
     return worked_hours - should_worked
 
