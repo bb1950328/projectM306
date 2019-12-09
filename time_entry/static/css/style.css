@@ -1,3 +1,13 @@
+/* JAN */
+body {
+    padding: 10px;
+}
+.login-form {
+    padding: 0 50px;
+}
+
+
+/* BASIL */
 .day_title {
     background-color: gray;
 }

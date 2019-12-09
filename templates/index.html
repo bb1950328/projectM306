@@ -1,5 +1,5 @@
 {% extends 'base_page.html' %}
-{% block title %}Home{% endblock %}
+{% block title %}<h2>Home</h2>{% endblock %}
 {% block content %}
     <select onchange="selection_changed()" id="week_or_month_selector">
         <option {{ selection.value_month }}>Monat</option>
@@ -9,13 +9,13 @@
     <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number" onchange="change_selection(0)">
     <button onclick="plus1_clicked()">></button>
     <input id="input_year" type="number" value="{{ selection.year }}" onchange="change_selection(0)">
-    <table>
+    <table class="highlight">
         <thead>
-        <tr>
-            <td>Projekt</td>
-            <td>Von</td>
-            <td>Bis</td>
-        </tr>
+            <tr>
+                <td>Projekt</td>
+                <td>Von</td>
+                <td>Bis</td>
+            </tr>
         </thead>
         <tbody>
         {% for day in days %}
