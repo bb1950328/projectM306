@@ -3,10 +3,11 @@ from time_entry.view.graph.base_graph import BaseGraph
 
 
 class TestGraph(BaseGraph):
-    def get_title(self):
+    @staticmethod
+    def get_title():
         return "Test Graph"
 
-    def generate(self):
+    def generate(self, args):
         squares_x = [1, 3, 4, 5, 8]
         squares_y = [8, 7, 3, 1, 10]
         circles_x = [9, 12, 4, 3, 15]

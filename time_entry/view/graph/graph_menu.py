@@ -7,6 +7,8 @@ from django.shortcuts import render
 
 from time_entry.view import base_view
 from time_entry.view.graph.base_graph import BaseGraph
+from time_entry.view.graph.employee_distribution_for_project import EmployeeDistributionForProject
+from time_entry.view.graph.project_distribution_for_employee import ProjectDistributionForEmployee
 from time_entry.view.graph.time_vs_worked_hours import TimeVsWorkedHours
 
 
@@ -23,12 +25,14 @@ class GraphMenuItem(object):
     url: str
     cls: Type[BaseGraph]
 
-    def __init__(self, name, url, cls):
-        self.name = name
+    def __init__(self, url, cls: Type[BaseGraph]):
+        self.name = cls.get_title()
         self.url = url
         self.cls = cls
 
 
 MENU_ITEMS: List[GraphMenuItem] = [
-    GraphMenuItem("Gearbeitete Stunden pro Tag", "time_vs_worked_hours", TimeVsWorkedHours)
+    GraphMenuItem("time_vs_worked_hours", TimeVsWorkedHours),
+    GraphMenuItem("employee_distribution_for_project", EmployeeDistributionForProject),
+    GraphMenuItem("project_distribution_for_employee", ProjectDistributionForEmployee),
 ]

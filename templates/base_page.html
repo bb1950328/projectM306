@@ -14,7 +14,7 @@
 {% endfor %}
 
 {% if user_authenticated %}
-    Angemeldet als <a href="./employee.html?empl_nr={{ user.emplNr }}">{{ user.firstName }} {{ user.lastName }}</a>
+    Angemeldet als <a href="/employee.html?empl_nr={{ user.emplNr }}">{{ user.firstName }} {{ user.lastName }}</a>
     <a href="/logout.html">Abmelden</a>
 {% else %}
     Nicht angemeldet <a href="/login.html">Anmelden</a>

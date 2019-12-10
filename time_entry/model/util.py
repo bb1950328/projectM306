@@ -44,8 +44,18 @@ def strmaxlen(inp: str, maxlen, dots=True):
     new = inp[:maxlen]
     return new + "..." if dots else new
 
+
 def is_on_windows():
     return os.name == 'nt'
 
+
 def is_on_linux():
     return os.name == 'posix'
+
+
+def repeat_maxlen(iterable, maxlen):
+    colors = [*iterable]
+    while len(colors) < maxlen:
+        colors.extend(iterable)
+    colors = colors[:maxlen]
+    return colors

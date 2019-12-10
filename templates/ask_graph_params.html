@@ -1,0 +1,13 @@
+{% extends 'base_page.html' %}
+{% block title %}Parameter nötig{% endblock %}
+{% block content %}
+    <h2>Visualisierungen</h2>
+    <p>Um diese Visualisierung abzurufen, sind folgende Parameter nötig:</p>
+    <form method="get">
+        {% for key in keys %}
+            <label for="input_{{ key }}">{{ key }}</label>
+            <input id="input_{{ key }}" name="{{ key }}">
+        {% endfor %}
+        <button type="submit">Abrufen</button>
+    </form>
+{% endblock %}

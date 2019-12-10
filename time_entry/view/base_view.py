@@ -14,7 +14,7 @@ def get_user_context(request: WSGIRequest) -> dict:
             return {"text": text, "link": link}
 
         nav_elements = [
-            get_dict("Home", "index.html"),
+            get_dict("Home", "/index.html"),
         ]
         if employee.Permission.can_view_employee_list(empl):
             nav_elements.append(get_dict("Mitarbeiter", "/employee.html"))

@@ -4,12 +4,13 @@ from decimal import Decimal
 
 from bokeh.palettes import Spectral11 as ColorPalette
 
-from time_entry.model import model
+from time_entry.model import model, util
 from time_entry.view.graph.base_graph import BaseGraph
 
 
 class TimeVsWorkedHours(BaseGraph):
-    def get_title(self):
+    @staticmethod
+    def get_title():
         return "Gearbeitete Stunden pro Tag"
 
     @staticmethod
@@ -18,7 +19,7 @@ class TimeVsWorkedHours(BaseGraph):
             "x_axis_type": "datetime"
         }
 
-    def generate(self):
+    def generate(self, args):
         data = model.get_hours_per_day_for_all_projects()
         all_dates = set()
         for val in data.values():
@@ -38,10 +39,7 @@ class TimeVsWorkedHours(BaseGraph):
             cols = list(zip(*values))
             source[pro.name] = cols[1]
         source["date"] = list(zip(*list(data.values())[0]))[0]
-        colors = [*ColorPalette]
-        while len(colors) < len(project_names):
-            colors.extend(ColorPalette)
-        colors = colors[:len(project_names)]
+        colors = util.repeat_maxlen(ColorPalette, len(project_names))
         self.figure.vbar_stack(project_names,
                                x="date",
                                width=datetime.timedelta(hours=18),

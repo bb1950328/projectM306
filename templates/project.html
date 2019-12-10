@@ -15,7 +15,8 @@
             <td>{{ hours }}</td>
         </tr>
         <tr>
-            <td>Mitarbeiter:</td>
+            <td>Mitarbeiter: <a href="/graph/employee_distribution_for_project?Projektnummer={{ nr }}">(Verteilung)</a>
+            </td>
             <td>
                 <ul>
                     {% for con in contributors %}

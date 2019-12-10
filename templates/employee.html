@@ -4,6 +4,10 @@
     <h1>{{ firstName }} {{ lastName }}</h1>
     <table>
         <tr>
+            <td>Mitarbeiternummer:</td>
+            <td>{{ empl_nr }}</td>
+        </tr>
+        <tr>
             <td>Gleitzeitsaldo:</td>
             <td>{{ float_time_total }}</td>
         </tr>
@@ -20,6 +24,7 @@
             <td>{{ absence_total }} Tage</td>
         </tr>
     </table>
+    <a href="/graph/project_distribution_for_employee?Mitarbeiternummer={{ empl_nr }}">Stundenverteilung anzeigen</a>
     <h2>Absenzen</h2>
     <a href="new_absence.html?empl_nr={{ empl_nr }}">Absenz erstellen</a>
     <br>

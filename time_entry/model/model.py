@@ -243,3 +243,31 @@ def get_hours_per_day(project_nr: int):
 def get_hours_per_day_for_all_projects() -> Dict[Project, List[Tuple[Union[datetime.date, decimal.Decimal]]]]:
     projects = collect_projects()
     return {pro: get_hours_per_day(pro.nr) for pro in projects}
+
+
+def get_hours_per_employee_for_project(project_nr: int):
+    query = f"SELECT projectNr, SUM(TIMEDIFF(end_, start_)/10000) AS 'hours' " \
+            f"FROM {entry.Entry.Table.name} " \
+            f"WHERE projectNr={project_nr} " \
+            f"GROUP BY emplNr ORDER BY 'hours' DESC;"
+    cur = db.get_conn().cursor()
+    cur.execute(query)
+    idx_emplnr = cur.column_names.index("emplNr")
+    idx_hours = cur.column_names.index("hours")
+    res = {employee.Employee.find(row[idx_emplnr]): row[idx_hours] for row in cur.fetchall()}
+    cur.close()
+    return res
+
+
+def get_hours_per_project_for_employee(empl_nr: int):
+    query = f"SELECT projectNr, SUM(TIMEDIFF(end_, start_)/10000) AS 'hours' " \
+            f"FROM {entry.Entry.Table.name} " \
+            f"WHERE emplNr={empl_nr} " \
+            f"GROUP BY projectNr ORDER BY 'hours' DESC;"
+    cur = db.get_conn().cursor()
+    cur.execute(query)
+    idx_emplnr = cur.column_names.index("projectNr")
+    idx_hours = cur.column_names.index("hours")
+    res = {Project.find(row[idx_emplnr]): row[idx_hours] for row in cur.fetchall()}
+    cur.close()
+    return res
