@@ -16,12 +16,20 @@ Including another URLconf
 from django.urls import path
 
 from time_entry.view import index, login, employee_view, admin, configuration, project_view
+from time_entry.view.graph import test_graph, graph_menu
 
 
 def gen(url, func):
     return [path(url, func),
             path(url + "/", func),
             path(url + ".html", func)]
+
+
+def generate_graphs():
+    res = []
+    for item in graph_menu.MENU_ITEMS:
+        res.extend(gen("graph/" + item.url, item.cls.view))
+    return res
 
 
 urlpatterns = [
@@ -39,4 +47,8 @@ urlpatterns = [
     *gen("configuration", configuration.view),
     *gen("configuration/save", configuration.save),
     *gen("project", project_view.view),
+    *gen("graph", graph_menu.view),
+    *gen("graph/test", test_graph.TestGraph.view),
+    # *gen("graph/time_vs_worked_hours", time_vs_worked_hours.TimeVsWorkedHours.view),
+    *generate_graphs(),
 ]

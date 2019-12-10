@@ -17,11 +17,13 @@ def get_user_context(request: WSGIRequest) -> dict:
             get_dict("Home", "index.html"),
         ]
         if employee.Permission.can_view_employee_list(empl):
-            nav_elements.append(get_dict("Mitarbeiter", "employee.html"))
+            nav_elements.append(get_dict("Mitarbeiter", "/employee.html"))
         if employee.Permission.can_be_admin(empl):
-            nav_elements.append(get_dict("Admin", "admin.html"))
+            nav_elements.append(get_dict("Admin", "/admin.html"))
         if employee.Permission.can_view_project_list(empl):
-            nav_elements.append(get_dict("Projekte", "project.html"))
+            nav_elements.append(get_dict("Projekte", "/project.html"))
+        if employee.Permission.can_view_graphs(empl):
+            nav_elements.append(get_dict("Visualisierungen", "/graph.html"))
         context["nav_elements"] = nav_elements
     else:
         context = {"user_authenticated": False}

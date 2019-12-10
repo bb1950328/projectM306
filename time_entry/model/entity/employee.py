@@ -85,6 +85,11 @@ class Permission(object):
         required = {Role.ADMIN, Role.HR, Role.CEO, Role.BOSS}
         return Permission._in_employee(required, employee)
 
+    @staticmethod
+    def can_view_graphs(employee):
+        required = {Role.ADMIN, Role.HR, Role.CEO, Role.BOSS}
+        return Permission._in_employee(required, employee)
+
 
 class Employee(Entity):
 

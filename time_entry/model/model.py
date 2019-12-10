@@ -3,7 +3,7 @@ import datetime
 import decimal
 import json
 import urllib
-from typing import Optional, List
+from typing import Optional, List, Dict, Tuple, Union
 
 from django.contrib.auth.models import User
 
@@ -226,3 +226,20 @@ def calculate_hours_for_project(project_nr):
     if res is None:
         res = decimal.Decimal("0")
     return res / 10_000  # TIMEDIFF() returns 10'000 per hour
+
+
+def get_hours_per_day(project_nr: int):
+    query = f"SELECT DATE(e.start_) AS 'date', SUM(TIMEDIFF(e.end_, e.start_))/10000 AS 'hours' " \
+            f"FROM {entry.Entry.Table.name} AS e " \
+            f"WHERE e.projectNr = {project_nr} " \
+            f"GROUP BY DATE(e.start_);"
+    cur = db.get_conn().cursor()
+    cur.execute(query)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
+
+def get_hours_per_day_for_all_projects() -> Dict[Project, List[Tuple[Union[datetime.date, decimal.Decimal]]]]:
+    projects = collect_projects()
+    return {pro: get_hours_per_day(pro.nr) for pro in projects}
