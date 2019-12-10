@@ -1,10 +1,12 @@
 {% extends 'base_page.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
-    <select onchange="selection_changed()" id="week_or_month_selector">
-        <option {{ selection.value_month }}>Monat</option>
-        <option {{ selection.value_week }}>Woche</option>
-    </select>
+    <span class="input-field col s12">
+        <select class="browser-default" onchange="selection_changed()" id="week_or_month_selector">
+            <option {{ selection.value_month }}>Monat</option>
+            <option {{ selection.value_week }}>Woche</option>
+        </select>
+    </span>
     <button onclick="minus1_clicked()"><</button>
     <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number" onchange="change_selection(0)">
     <button onclick="plus1_clicked()">></button>

@@ -5,6 +5,7 @@
     <title>{% block title %}ProjectM306{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/materialize.min.css" %}">
 </head>
 <body>
 {% for el in nav_elements %}
@@ -43,5 +44,6 @@
         message_box_backgrond.outerHTML = "";
     }
 </script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 </body>
 </html>
