@@ -4,3 +4,4 @@ emplNr;firstName;lastName;roles;since;until
 "3";"Basil";"Bader";"boss+admin";"2019-11-01";\N
 "4";"Marc";"Rusch";"";"2019-11-01";\N
 "5";"Quentin";"Weber";"";"2019-11-01";"2019-12-31"
+"6";"David";"Styger";"";"2019-12-01";"2020-12-31"
