@@ -271,3 +271,26 @@ def get_hours_per_project_for_employee(empl_nr: int):
     res = {Project.find(row[idx_emplnr]): row[idx_hours] for row in cur.fetchall()}
     cur.close()
     return res
+
+
+def get_number_of_employees():
+    query = f"SELECT since, until " \
+            f"FROM {employee.Employee.Table.name} " \
+            f"ORDER BY since ASC;"
+    print(query)
+    cur = db.get_conn().cursor()
+    cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
+    start = data[0][0]
+    end = datetime.date.today()
+    days = [start + datetime.timedelta(days=x) for x in range((end - start).days + 1)]
+    counts = []
+    for day in days:
+        num = 0
+        for since, until in data:
+            if (until is None and since < day) \
+                    or (since < day < until):
+                num += 1
+        counts.append(num)
+    return days, counts
