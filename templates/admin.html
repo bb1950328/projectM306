@@ -23,7 +23,7 @@
         {% endfor %}
         </tbody>
     </table>
-    <button onclick="run_git_pull()">'git pull' ausführen</button>
+    <button class="btn waves-light waves-effect" onclick="run_git_pull()">'git pull' ausführen</button>
     <br>
     <span id="message_span"></span>
     <h2>Import</h2>
@@ -32,13 +32,17 @@
             <option>{{ folder }}</option>
         {% endfor %}
     </select>
-    <button type="button" onclick="run_import()">Importieren</button>
+    <button class="btn waves-light waves-effect" type="button" onclick="run_import()"><i class="material-icons">cloud_download</i>
+        Importieren
+    </button>
     <h2>Export</h2>
     <form method="post">
         {% csrf_token %}
         <label for="input_export_folder">Name: </label>
         <input type="text" name="export_folder" id="input_export_folder">
-        <button type="button" onclick="run_export()">Exportieren</button>
+        <button class="btn waves-light waves-effect" type="button" onclick="run_export()"><i class="material-icons">cloud_upload</i>
+            Exportieren
+        </button>
     </form>
     <script>
         function run_import() {

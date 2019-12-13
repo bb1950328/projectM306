@@ -28,6 +28,10 @@ select.period-selector {
 
 
 /* BASIL */
+select {
+    display: inline-block !important;
+}
+
 .project_input {
     width: 1.6cm;
 }
