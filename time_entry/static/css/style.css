@@ -1,9 +1,32 @@
 /* JAN */
 body {
     padding: 10px;
+}
+main {
     max-width: 800px;
     margin-left: auto !important;
     margin-right: auto !important;
+}
+nav {
+    background-color: #26a69a !important;
+    margin-bottom: 10px;
+}
+nav ul{
+    display: flex;
+    justify-content: space-around;
+}
+.person-icon {
+    display: inline-block !important;
+}
+.sidenav li > a > i.person-icon {
+    margin: 0px !important;
+}
+.sidenav li>a:hover {
+    background-color: #26a69a !important;
+}
+.employee-a {
+    display: flex;
+    align-items: center;
 }
 .login-form {
     padding: 0 50px;

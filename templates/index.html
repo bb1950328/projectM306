@@ -30,7 +30,7 @@
             <tr id="{{ day.id }}" class="day_title">
                 <td colspan="2">{{ day.displayName }}</td>
                 <td>
-                    <button onclick="add_entry('{{ day.id }}')">+</button>
+                    <button class="btn-floating waves-effect waves-light" onclick="add_entry('{{ day.id }}')"><i class="material-icons">add</i></button>
                 </td>
             </tr>
             {% for entry in day.entries %}
