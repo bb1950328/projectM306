@@ -34,9 +34,11 @@
         <button onclick="hide_message_box()">OK</button>
     </div>
 {% endif %}
+<main>
 {% block content %}
     ProjectM306
 {% endblock %}
+</main>
 <script>
     function hide_message_box() {
         let message_box = document.getElementById("message_box");
