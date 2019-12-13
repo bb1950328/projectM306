@@ -68,7 +68,7 @@ select {
 }
 
 #message_box {
-
+    z-index: 100;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -79,15 +79,8 @@ select {
     height: fit-content;
 }
 
-.message_box_red {
-    background-color: red;
-}
-
-.message_box_green {
-    background-color: darkgreen;
-}
-
 #message_box_background {
+    z-index: 100;
     position: absolute;
     top: 0;
     left: 0;

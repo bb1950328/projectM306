@@ -39,11 +39,11 @@
                                onchange="entry_changed('{{ entry.id }}')" class="project_input">
                         <span id="project_name_{{ entry.id }}" class="{{ day.id }}">{{ entry.project_name }}</span>
                     </td>
-                    <td><input type="time" value="{{ entry.von }}" id="von_input_{{ entry.id }}"
-                               onchange="entry_changed('{{ entry.id }}')" class="von_input">
+                    <td><input class="timepicker von_input" type="text" value="{{ entry.von }}" id="von_input_{{ entry.id }}"
+                               onchange="entry_changed('{{ entry.id }}')">
                     </td>
-                    <td><input type="time" value="{{ entry.bis }}" id="bis_input_{{ entry.id }}"
-                               onchange="entry_changed('{{ entry.id }}')" class="bis_input">
+                    <td><input class="timepicker bis_input" type="text" value="{{ entry.bis }}" id="bis_input_{{ entry.id }}"
+                               onchange="entry_changed('{{ entry.id }}')">
                     </td>
                 </tr>
             {% endfor %}
@@ -145,22 +145,31 @@
             span_project.id = "project_name_" + entry_id;
             span_project.classList.add(day_id);
 
-            input_von.type = "time";
+            input_von.type = "text";
+            input_von.classList.add("timepicker");
+            input_von.classList.add("von_input");
             input_von.value = "00:00";
             input_von.id = "von_input_" + entry_id;
             input_von.setAttribute("onchange", event_func);
-            input_von.classList.add("von_input");
 
-            input_bis.type = "time";
+            input_bis.type = "text";
+            input_bis.classList.add("timepicker");
+            input_bis.classList.add("bis_input");
             input_bis.value = "00:00";
             input_bis.id = "bis_input_" + entry_id;
             input_bis.setAttribute("onchange", event_func);
-            input_bis.classList.add("bis_input");
 
             dayrow.after(tr);
             new_entries.push(entry_id);
             update_save_enabling();
             entry_changed(entry_id);
+
+            $(document).ready(function(){
+                $('.timepicker').timepicker({
+                    format: "HH:ii",
+                    twelveHour: false
+                });
+            });
         }
 
         let changed_entries = [];

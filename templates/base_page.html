@@ -41,17 +41,23 @@
     {% endif %}
   </ul>
 {% if messages %}
-    <div id="message_box_background">
-    </div>
-    <div id="message_box" class="message_box_{{ msg_class }}">
-        <h3>{{ message_title }}</h3>
-        <ul>
-            {% for msg in messages %}
-                <li>{{ msg }}</li>
-            {% endfor %}
-        </ul>
-        <br>
-        <button onclick="hide_message_box()">OK</button>
+    <div id="message_box_background"></div>
+    <div class="row" id="message_box">
+        <div class="col s12 m12">
+            <div class="card {{ msg_class }} darken-1 message-box">
+                <div class="card-content white-text">
+                        <h3 class="card-title">{{ message_title }}</h3>
+                        <ul>
+                            {% for msg in messages %}
+                                <li>{{ msg }}</li>
+                            {% endfor %}
+                        </ul>
+                </div>
+                <div class="card-action">
+                    <button class="btn {{ msg_class }} darken-5 waves-light" onclick="hide_message_box()"><i class="material-icons">check</i></button>
+                </div>
+            </div>
+        </div>
     </div>
 {% endif %}
 <main>
@@ -69,6 +75,20 @@
 
     $(document).ready(function(){
         $('.sidenav').sidenav();
+    });
+
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            format:'yyyy-mm-dd',
+            autoClose: true
+        });
+    });
+
+    $(document).ready(function(){
+        $('.timepicker').timepicker({
+            format: "HH:ii",
+            twelveHour: false
+        });
     });
 </script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
