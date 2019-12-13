@@ -2,27 +2,28 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     <div class="date-period-picker-wrapper">
-    <i class="date-icon medium material-icons">date_range</i>
-    <div class="date-period-picker">
+        <i class="date-icon medium material-icons">date_range</i>
+        <div class="date-period-picker">
     <span class="input-field col s12">
         <select class="period-selector browser-default" onchange="selection_changed()" id="week_or_month_selector">
             <option {{ selection.value_month }}>Monat</option>
             <option {{ selection.value_week }}>Woche</option>
         </select>
     </span>
-    <button class="btn" onclick="minus1_clicked()"><i class="material-icons">chevron_left</i></button>
-    <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number" onchange="change_selection(0)">
-    <button class="btn" onclick="plus1_clicked()"><i class="material-icons">chevron_right</i></button>
-    <input id="input_year" type="number" value="{{ selection.year }}" onchange="change_selection(0)">
-    </div>
+            <button class="btn" onclick="minus1_clicked()"><i class="material-icons">chevron_left</i></button>
+            <input id="input_week_or_month" value="{{ selection.week_or_month }}" type="number"
+                   onchange="change_selection(0)">
+            <button class="btn" onclick="plus1_clicked()"><i class="material-icons">chevron_right</i></button>
+            <input id="input_year" type="number" value="{{ selection.year }}" onchange="change_selection(0)">
+        </div>
     </div>
     <table class="highlight">
         <thead>
-            <tr>
-                <td>Projekt</td>
-                <td>Von</td>
-                <td>Bis</td>
-            </tr>
+        <tr>
+            <td>Projekt</td>
+            <td>Von</td>
+            <td>Bis</td>
+        </tr>
         </thead>
         <tbody>
         {% for day in days %}
@@ -50,7 +51,9 @@
         </tbody>
     </table>
     <br>
-    <button class="btn waves-light waves-effect" type="submit" onclick="save_clicked()" id="save_button">Speichern</button>
+    <button class="btn waves-light waves-effect" type="submit" onclick="save_clicked()" id="save_button">
+        <i class="material-icons">save</i>Speichern
+    </button>
 
     <script>
 
